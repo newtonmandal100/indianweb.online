@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice - INDIAN WEB</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+
+    <div class="container mx-auto px-6 py-12">
+        <div class="max-w-3xl mx-auto bg-white rounded-2xl shadow-2xl overflow-hidden">
+            <div class="bg-gradient-to-r from-purple-600 to-pink-600 text-white p-6 text-center">
+                <h1 class="text-3xl font-bold">INDIAN WEB</h1>
+                <p>Official Invoice</p>
+            </div>
+            
+            <div class="p-8">
+                <div class="flex justify-between mb-8">
+                    <div>
+                        <p class="text-gray-500">Invoice No:</p>
+                        <p class="font-bold"><%= order.invoiceNumber %></p>
+                    </div>
+                    <div>
+                        <p class="text-gray-500">Date:</p>
+                        <p class="font-bold"><%= order.createdAt.toDateString() %></p>
+                    </div>
+                    <div>
+                        <p class="text-gray-500">Order ID:</p>
+                        <p class="font-bold"><%= order.orderId %></p>
+                    </div>
+                </div>
+                
+                <div class="mb-8">
+                    <h3 class="font-bold text-lg mb-2">Billed To:</h3>
+                    <p><%= order.customerName %></p>
+                    <p><%= order.customerEmail %></p>
+                    <p><%= order.customerPhone || '' %></p>
+                </div>
+                
+                <table class="w-full mb-8">
+                    <thead class="bg-gray-100">
+                        <tr><th class="p-3 text-left">Item</th><th class="p-3 text-right">Price</th></tr>
+                    </thead>
+                    <tbody>
+                        <% order.items.forEach(item => { %>
+                        <tr class="border-b"><td class="p-3"><%= item.name %></td><td class="p-3 text-right">₹<%= item.price %></td></tr>
+                        <% }); %>
+                        <tr class="font-bold"><td class="p-3">Total</td><td class="p-3 text-right">₹<%= order.totalAmount %></td></tr>
+                    </tbody>
+                </table>
+                
+                <div class="text-center text-gray-500 text-sm">
+                    <p>Thank you for shopping with INDIAN WEB!</p>
+                    <p>For support, contact: support@indianweb.com</p>
+                </div>
+                
+                <div class="mt-8 text-center">
+                    <button onclick="window.print()" class="bg-purple-600 text-white px-6 py-2 rounded-lg">Print Invoice</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

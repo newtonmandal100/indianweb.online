@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INDIAN WEB - Premium Software Solutions</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- সেফ চেক সহ স্টাইল -->
+    <% if(typeof siteSettings !== 'undefined' && siteSettings && siteSettings.customAnimationCSS) { %>
+    <style>
+        <%= siteSettings.customAnimationCSS %>
+    </style>
+    <% } %>
+    
+    <% if(typeof siteSettings !== 'undefined' && siteSettings && siteSettings.backgroundAnimation === 'gradient-move') { %>
+    <style>
+        body {
+            background: linear-gradient(270deg, #667eea, #764ba2, #f093fb, #f5576c);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+        }
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .content-wrapper {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+        }
+        main > *:not(footer) {
+            background: rgba(255,255,255,0.95);
+            margin: 20px;
+            border-radius: 30px;
+            padding: 20px;
+        }
+    </style>
+    <% } %>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        * { font-family: 'Inter', sans-serif; }
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .btn-gradient {
+            background: linear-gradient(90deg, #f093fb 0%, #f5576c 100%);
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+        /* মোবাইল রেসপন্সিভ */
+        @media (max-width: 768px) {
+            .container { padding-left: 1rem; padding-right: 1rem; }
+            .text-5xl { font-size: 2rem; }
+            .text-7xl { font-size: 2.5rem; }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+    <!-- Navbar -->
+    <nav class="bg-white shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto px-4 md:px-6 py-4">
+            <div class="flex justify-between items-center flex-wrap gap-4">
+                <div class="flex items-center space-x-3">
+                    <% if(typeof siteSettings !== 'undefined' && siteSettings && siteSettings.logo) { %>
+                    <img src="<%= siteSettings.logo %>" alt="<%= siteSettings.logoAlt || 'INDIAN WEB Logo' %>" 
+                         style="width: <%= siteSettings.logoWidth || 120 %>px; height: <%= siteSettings.logoHeight || 50 %>px; object-fit: contain;">
+                    <% } else { %>
+                    <div class="text-2xl font-bold">
+                        <span class="text-purple-600">INDIAN</span>
+                        <span class="text-pink-600">WEB</span>
+                    </div>
+                    <% } %>
+                </div>
+                <div class="hidden md:flex space-x-6 lg:space-x-8">
+                    <a href="/" class="text-gray-700 hover:text-purple-600 transition font-medium">Home</a>
+                    <a href="/store" class="text-gray-700 hover:text-purple-600 transition font-medium">Store</a>
+                    <a href="/custom-order" class="text-gray-700 hover:text-purple-600 transition font-medium">Custom Order</a>
+                    <a href="/support" class="text-gray-700 hover:text-purple-600 transition font-medium">Support</a>
+                    <a href="/contact" class="text-gray-700 hover:text-purple-600 transition font-medium">Contact</a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="/cart" class="relative text-2xl">
+                        🛒
+                        <span id="cartCount" class="absolute -top-2 -right-4 bg-red-500 text-white rounded-full px-1.5 py-0.5 text-xs">0</span>
+                    </a>
+                    <% if(user && user.userId) { %>
+                        <span class="text-gray-700 hidden sm:inline">👋 <%= user.userName %></span>
+                        <a href="/logout" class="text-red-500 hover:text-red-700">Logout</a>
+                    <% } else { %>
+                        <a href="/login" class="btn-gradient text-white px-4 py-2 rounded-lg">Login</a>
+                    <% } %>
+                </div>
+            </div>
+            <!-- মোবাইল মেনু টগল -->
+            <div class="md:hidden flex justify-center mt-3 space-x-4">
+                <a href="/" class="text-gray-700 text-sm">Home</a>
+                <a href="/store" class="text-gray-700 text-sm">Store</a>
+                <a href="/custom-order" class="text-gray-700 text-sm">Custom</a>
+                <a href="/support" class="text-gray-700 text-sm">Support</a>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="gradient-bg text-white py-16 md:py-24 rounded-3xl mx-4 md:mx-6 mt-6"
+                 data-aos="<%= (typeof siteSettings !== 'undefined' && siteSettings) ? siteSettings.heroAnimation : 'fade-up' %>" 
+                 data-aos-duration="<%= (typeof siteSettings !== 'undefined' && siteSettings) ? siteSettings.animationSpeed : 1000 %>">
+            <div class="container mx-auto px-4 md:px-6 text-center">
+                <h1 class="text-4xl md:text-7xl font-bold mb-4 md:mb-6">
+                    <%= (portfolio && portfolio.heroTitle) ? portfolio.heroTitle : 'Premium Software Solutions' %>
+                </h1>
+                <p class="text-lg md:text-2xl mb-8 md:mb-10 opacity-90">
+                    <%= (portfolio && portfolio.heroSubtitle) ? portfolio.heroSubtitle : 'Download high-quality software for your business' %>
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="/store" class="bg-white text-purple-600 px-6 md:px-8 py-3 rounded-full font-semibold hover:shadow-xl transition transform hover:scale-105 inline-block">
+                        🚀 Explore Store
+                    </a>
+                    <a href="/custom-order" class="border-2 border-white px-6 md:px-8 py-3 rounded-full font-semibold hover:bg-white hover:text-purple-600 transition inline-block">
+                        📝 Request Custom Software
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats Section -->
+        <section class="py-12 md:py-16 rounded-3xl mx-4 md:mx-6 my-6 bg-white shadow-xl">
+            <div class="container mx-auto px-4 md:px-6">
+                <div class="grid md:grid-cols-3 gap-6 md:gap-8 text-center">
+                    <div class="p-4 md:p-6" data-aos="zoom-in">
+                        <div class="text-4xl md:text-5xl text-purple-600 mb-2">📦</div>
+                        <div class="text-2xl md:text-3xl font-bold"><%= stats && stats.totalSoftware ? stats.totalSoftware : 0 %></div>
+                        <div class="text-gray-600">Software Products</div>
+                    </div>
+                    <div class="p-4 md:p-6" data-aos="zoom-in" data-aos-delay="100">
+                        <div class="text-4xl md:text-5xl text-pink-600 mb-2">👥</div>
+                        <div class="text-2xl md:text-3xl font-bold"><%= stats && stats.totalCustomers ? stats.totalCustomers : 0 %></div>
+                        <div class="text-gray-600">Happy Customers</div>
+                    </div>
+                    <div class="p-4 md:p-6" data-aos="zoom-in" data-aos-delay="200">
+                        <div class="text-4xl md:text-5xl text-indigo-600 mb-2">📝</div>
+                        <div class="text-2xl md:text-3xl font-bold"><%= stats && stats.totalOrders ? stats.totalOrders : 0 %></div>
+                        <div class="text-gray-600">Orders Completed</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Featured Software -->
+        <section class="py-16 md:py-20 rounded-3xl mx-4 md:mx-6 my-6 bg-white shadow-xl">
+            <div class="container mx-auto px-4 md:px-6">
+                <h2 class="text-3xl md:text-4xl font-bold text-center mb-8 md:mb-12">
+                    <span class="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                        ⭐ Featured Software
+                    </span>
+                </h2>
+                
+                <% if(featuredSoftware && featuredSoftware.length > 0) { %>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+                    <% featuredSoftware.forEach((software, index) => { 
+                        // সেফ ডিসপ্লের জন্য ভেরিয়েবল চেক
+                        var softwareName = software.name || 'Software';
+                        var softwareDesc = software.description || 'No description available';
+                        var softwareDescShort = softwareDesc.length > 100 ? softwareDesc.substring(0, 100) + '...' : softwareDesc;
+                        var softwarePrice = typeof software.price === 'number' ? software.price : 0;
+                        var softwareImage = software.imageUrl || '/images/default-software.jpg';
+                        var softwareDemoUrl = software.demoUrl || null;
+                        var discountedPrice = Math.round(softwarePrice * 1.5);
+                    %>
+                    <div class="bg-gradient-to-br from-gray-50 to-white rounded-2xl shadow-lg overflow-hidden card-hover border border-gray-100"
+                         data-aos="<%= (typeof siteSettings !== 'undefined' && siteSettings) ? siteSettings.cardAnimation : 'fade-up' %>" 
+                         data-aos-duration="<%= (typeof siteSettings !== 'undefined' && siteSettings) ? siteSettings.animationSpeed : 1000 %>"
+                         data-aos-delay="<%= index * 100 %>">
+                        <img src="<%= softwareImage %>" alt="<%= softwareName %>" class="w-full h-48 md:h-56 object-cover" onerror="this.src='/images/default-software.jpg'">
+                        <div class="p-4 md:p-6">
+                            <h3 class="text-lg md:text-xl font-bold mb-2"><%= softwareName %></h3>
+                            <p class="text-gray-600 text-sm md:text-base mb-4"><%= softwareDescShort %></p>
+                            <div class="flex justify-between items-center flex-wrap gap-2">
+                                <div>
+                                    <span class="text-xl md:text-2xl font-bold text-purple-600">₹<%= softwarePrice %></span>
+                                    <% if(softwarePrice > 0) { %>
+                                    <span class="text-xs md:text-sm text-gray-500 line-through ml-2">₹<%= discountedPrice %></span>
+                                    <% } %>
+                                </div>
+                                <div class="flex space-x-2">
+                                    <% if(softwareDemoUrl) { %>
+                                    <a href="<%= softwareDemoUrl %>" target="_blank" class="text-blue-500 hover:text-blue-700 text-sm">
+                                        <i class="fas fa-eye"></i> Demo
+                                    </a>
+                                    <% } %>
+                                    <button onclick="addToCart('<%= software._id %>', '<%= softwareName.replace(/'/g, "\\'") %>', <%= softwarePrice %>)" 
+                                            class="btn-gradient text-white px-3 md:px-4 py-1 md:py-2 rounded-lg hover:opacity-90 transition text-sm">
+                                        Buy Now
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <% }); %>
+                </div>
+                <% } else { %>
+                <div class="text-center py-12">
+                    <p class="text-gray-500">No software available yet.</p>
+                </div>
+                <% } %>
+                
+                <div class="text-center mt-10 md:mt-12">
+                    <a href="/store" class="btn-gradient text-white px-6 md:px-8 py-3 rounded-full font-semibold hover:shadow-xl transition inline-block">
+                        View All Software <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Services Section -->
+        <section class="py-16 md:py-20 rounded-3xl mx-4 md:mx-6 my-6 bg-white shadow-xl">
+            <div class="container mx-auto px-4 md:px-6">
+                <h2 class="text-3xl md:text-4xl font-bold text-center mb-8 md:mb-12">
+                    <span class="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                        🎯 Our Services
+                    </span>
+                </h2>
+                <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="text-center p-4 md:p-6" data-aos="fade-up">
+                        <div class="text-4xl md:text-5xl mb-4">💻</div>
+                        <h3 class="text-lg md:text-xl font-bold mb-2">Custom Software</h3>
+                        <p class="text-gray-600 text-sm">Tailored solutions for your business needs</p>
+                    </div>
+                    <div class="text-center p-4 md:p-6" data-aos="fade-up" data-aos-delay="100">
+                        <div class="text-4xl md:text-5xl mb-4">🔧</div>
+                        <h3 class="text-lg md:text-xl font-bold mb-2">24/7 Support</h3>
+                        <p class="text-gray-600 text-sm">Round the clock technical assistance</p>
+                    </div>
+                    <div class="text-center p-4 md:p-6" data-aos="fade-up" data-aos-delay="200">
+                        <div class="text-4xl md:text-5xl mb-4">☁️</div>
+                        <h3 class="text-lg md:text-xl font-bold mb-2">Cloud Integration</h3>
+                        <p class="text-gray-600 text-sm">Seamless cloud deployment</p>
+                    </div>
+                    <div class="text-center p-4 md:p-6" data-aos="fade-up" data-aos-delay="300">
+                        <div class="text-4xl md:text-5xl mb-4">🔒</div>
+                        <h3 class="text-lg md:text-xl font-bold mb-2">Secure Payment</h3>
+                        <p class="text-gray-600 text-sm">100% secure transactions</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-10 md:py-12 mt-12">
+        <div class="container mx-auto px-4 md:px-6">
+            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+                <div>
+                    <h3 class="text-xl md:text-2xl font-bold mb-4">INDIAN WEB</h3>
+                    <p class="text-gray-400 text-sm">Premium software solutions for modern businesses.</p>
+                    <div class="flex space-x-4 mt-4">
+                        <a href="#" class="text-gray-400 hover:text-white text-xl"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white text-xl"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white text-xl"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white text-xl"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Quick Links</h4>
+                    <ul class="space-y-2 text-gray-400 text-sm">
+                        <li><a href="/store" class="hover:text-white">📦 Store</a></li>
+                        <li><a href="/custom-order" class="hover:text-white">🎨 Custom Order</a></li>
+                        <li><a href="/support" class="hover:text-white">❓ Support</a></li>
+                        <li><a href="/contact" class="hover:text-white">📞 Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Contact Info</h4>
+                    <ul class="space-y-2 text-gray-400 text-sm">
+                        <li><i class="fas fa-phone mr-2"></i> <%= (portfolio && portfolio.contactPhone) ? portfolio.contactPhone : '+91 98765 43210' %></li>
+                        <li><i class="fas fa-envelope mr-2"></i> <%= (portfolio && portfolio.contactEmail) ? portfolio.contactEmail : 'support@indianweb.com' %></li>
+                        <li><i class="fas fa-map-marker-alt mr-2"></i> <%= (portfolio && portfolio.contactAddress) ? portfolio.contactAddress : 'New Delhi, India' %></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Secure Payments</h4>
+                    <div class="flex space-x-3 text-2xl md:text-3xl">
+                        <span>💳</span> <span>📱</span> <span>🏦</span> <span>🪪</span>
+                    </div>
+                    <p class="text-gray-400 text-xs md:text-sm mt-4">100% Secure Transactions</p>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 mt-8 pt-6 md:pt-8 text-center text-gray-500 text-sm">
+                <p>&copy; 2025 INDIAN WEB. All rights reserved. Designed with ❤️ for India</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <script>
+        // AOS initialization with safe check
+        if(typeof AOS !== 'undefined') {
+            AOS.init({
+                duration: <%= (typeof siteSettings !== 'undefined' && siteSettings) ? siteSettings.animationSpeed : 1000 %>,
+                once: true
+            });
+        }
+        
+        // Cart count update function
+        function updateCartCount() {
+            fetch('/api/cart-count')
+                .then(res => res.json())
+                .then(data => {
+                    const cartSpan = document.getElementById('cartCount');
+                    if(cartSpan) {
+                        cartSpan.innerText = data.count || 0;
+                    }
+                })
+                .catch(err => {
+                    console.log('Cart API not ready yet');
+                    // Fallback: local storage থেকে দেখুন
+                    const localCart = JSON.parse(localStorage.getItem('cart') || '[]');
+                    const cartSpan = document.getElementById('cartCount');
+                    if(cartSpan) cartSpan.innerText = localCart.length;
+                });
+        }
+        
+        // Add to cart function
+        function addToCart(id, name, price) {
+            // Local storage backup
+            let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            cart.push({ id, name, price });
+            localStorage.setItem('cart', JSON.stringify(cart));
+            
+            // Server এ পাঠানোর চেষ্টা
+            fetch('/add-to-cart', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ softwareId: id, name, price })
+            }).then(res => res.json()).then(data => {
+                if(data.success) {
+                    updateCartCount();
+                    alert('✅ ' + name + ' added to cart!');
+                }
+            }).catch(err => {
+                // সার্ভার না থাকলেও লোকালি কাজ করবে
+                updateCartCount();
+                alert('✅ ' + name + ' added to cart (offline mode)!');
+            });
+        }
+        
+        // Page load এ cart count আপডেট
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCartCount();
+        });
+        
+        <% if(typeof siteSettings !== 'undefined' && siteSettings && siteSettings.backgroundAnimation === 'particle') { %>
+        console.log('Particle animation enabled');
+        <% } %>
+    </script>
+</body>
+</html>

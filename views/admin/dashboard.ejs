@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - INDIAN WEB</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-gray-100">
+
+    <div class="flex h-screen">
+        <!-- Sidebar -->
+        <div class="w-64 bg-gradient-to-b from-purple-800 to-indigo-900 text-white">
+            <div class="p-6">
+                <h2 class="text-2xl font-bold">INDIAN WEB</h2>
+                <p class="text-sm opacity-75">Admin: Newton Mandal</p>
+            </div>
+            <nav class="mt-8">
+                <a href="/admin/dashboard" class="block py-3 px-6 bg-purple-700">📊 Dashboard</a>
+                <a href="/admin/sales-report" class="block py-3 px-6 hover:bg-purple-700">📈 Sales Report</a>
+                <a href="/admin/software" class="block py-3 px-6 hover:bg-purple-700">💾 Software</a>
+                <a href="/admin/custom-orders" class="block py-3 px-6 hover:bg-purple-700">🎨 Custom Orders</a>
+                <a href="/admin/support-queries" class="block py-3 px-6 hover:bg-purple-700">❓ Support</a>
+                <a href="/admin/portfolio" class="block py-3 px-6 hover:bg-purple-700">🎯 Portfolio</a>
+                <a href="/admin/site-settings" class="block py-3 px-6 hover:bg-purple-700">⚙️ Site Settings</a>
+                <a href="/admin/logout" class="block py-3 px-6 hover:bg-red-700 mt-10">🚪 Logout</a>
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1 overflow-y-auto">
+            <div class="bg-white shadow-sm px-8 py-4">
+                <h1 class="text-2xl font-bold">Welcome back, Newton Mandal!</h1>
+            </div>
+
+            <div class="p-8">
+                <!-- Stats Cards -->
+                <div class="grid md:grid-cols-4 gap-6 mb-8">
+                    <div class="bg-gradient-to-r from-green-400 to-green-600 text-white rounded-xl p-6">
+                        <div class="text-3xl mb-2">₹<%= totalRevenue %></div>
+                        <div>Total Revenue</div>
+                    </div>
+                    <div class="bg-gradient-to-r from-blue-400 to-blue-600 text-white rounded-xl p-6">
+                        <div class="text-3xl mb-2"><%= totalOrders %></div>
+                        <div>Total Orders</div>
+                    </div>
+                    <div class="bg-gradient-to-r from-purple-400 to-purple-600 text-white rounded-xl p-6">
+                        <div class="text-3xl mb-2"><%= totalCustomers %></div>
+                        <div>Customers</div>
+                    </div>
+                    <div class="bg-gradient-to-r from-pink-400 to-pink-600 text-white rounded-xl p-6">
+                        <div class="text-3xl mb-2">25</div>
+                        <div>New This Month</div>
+                    </div>
+                </div>
+
+                <!-- Recent Orders -->
+                <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
+                    <h2 class="text-xl font-bold mb-4">Recent Orders</h2>
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead class="bg-gray-100">
+                                <tr><th class="p-3 text-left">Order ID</th><th>Customer</th><th>Amount</th><th>Status</th><th>Date</th></tr>
+                            </thead>
+                            <tbody>
+                                <% recentOrders.forEach(order => { %>
+                                <tr class="border-b"><td class="p-3"><%= order.orderId %></td><td><%= order.customerName %></td><td>₹<%= order.totalAmount %></td><td><span class="bg-green-100 text-green-700 px-2 py-1 rounded"><%= order.status %></span></td><td><%= order.createdAt.toDateString() %></td></tr>
+                                <% }); %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Custom Orders -->
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h2 class="text-xl font-bold mb-4">Custom Software Requests</h2>
+                    <% customOrders.forEach(custom => { %>
+                    <div class="border-l-4 border-purple-500 bg-gray-50 p-4 rounded mb-3">
+                        <div class="font-bold"><%= custom.softwareName %></div>
+                        <div class="text-sm">From: <%= custom.customerName %></div>
+                        <div class="text-sm mt-1"><%= custom.description.substring(0, 100) %></div>
+                        <span class="inline-block mt-2 px-2 py-1 bg-yellow-100 text-yellow-700 rounded text-xs"><%= custom.status %></span>
+                    </div>
+                    <% }); %>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart - INDIAN WEB</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-50">
+
+    <nav class="bg-white shadow-lg p-4">
+        <div class="container mx-auto flex justify-between">
+            <div class="text-2xl font-bold"><span class="text-purple-600">INDIAN</span><span class="text-pink-600">WEB</span></div>
+            <a href="/store" class="text-purple-600">← Continue Shopping</a>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-6 py-12">
+        <h1 class="text-3xl font-bold mb-8">🛒 Your Cart</h1>
+        
+        <% if(cart.length === 0) { %>
+        <div class="text-center py-20">
+            <div class="text-6xl mb-4">🛒</div>
+            <p class="text-xl text-gray-600">Your cart is empty</p>
+            <a href="/store" class="btn-gradient text-white px-6 py-3 rounded-lg inline-block mt-4">Browse Software</a>
+        </div>
+        <% } else { %>
+        <div class="grid lg:grid-cols-3 gap-8">
+            <div class="lg:col-span-2">
+                <% cart.forEach((item, index) => { %>
+                <div class="bg-white rounded-xl shadow-md p-6 mb-4 flex justify-between items-center">
+                    <div>
+                        <h3 class="text-xl font-bold"><%= item.name %></h3>
+                        <p class="text-purple-600 font-bold text-xl">₹<%= item.price %></p>
+                    </div>
+                    <button onclick="removeItem(<%= index %>)" class="text-red-500 hover:text-red-700"><i class="fas fa-trash"></i></button>
+                </div>
+                <% }); %>
+            </div>
+            <div class="bg-white rounded-xl shadow-md p-6 h-fit">
+                <h2 class="text-xl font-bold mb-4">Order Summary</h2>
+                <div class="flex justify-between py-3 border-b">
+                    <span>Subtotal</span>
+                    <span>₹<%= total %></span>
+                </div>
+                <div class="flex justify-between py-3 border-b">
+                    <span>GST (18%)</span>
+                    <span>₹<%= Math.round(total * 0.18) %></span>
+                </div>
+                <div class="flex justify-between py-3 text-xl font-bold">
+                    <span>Total</span>
+                    <span class="text-purple-600">₹<%= total + Math.round(total * 0.18) %></span>
+                </div>
+                <a href="/checkout" class="btn-gradient text-white w-full text-center py-3 rounded-lg font-bold block mt-4">Proceed to Checkout →</a>
+            </div>
+        </div>
+        <% } %>
+    </div>
+
+    <style>
+        .btn-gradient { background: linear-gradient(90deg, #f093fb 0%, #f5576c 100%); display: inline-block; }
+    </style>
+    <script>
+        function removeItem(index) {
+            fetch('/remove-from-cart', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ index })
+            }).then(() => location.reload());
+        }
+    </script>
+</body>
+</html>

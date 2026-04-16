@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales Report - INDIAN WEB Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-gray-100">
+    <div class="flex h-screen">
+        <!-- Sidebar -->
+        <div class="w-64 bg-gradient-to-b from-purple-800 to-indigo-900 text-white">
+            <div class="p-6">
+                <h2 class="text-2xl font-bold">INDIAN WEB</h2>
+                <p class="text-sm opacity-75">Admin: Newton Mandal</p>
+            </div>
+            <nav class="mt-8">
+                <a href="/admin/dashboard" class="block py-3 px-6 hover:bg-purple-700">📊 Dashboard</a>
+                <a href="/admin/sales-report" class="block py-3 px-6 bg-purple-700">📈 Sales Report</a>
+                <a href="/admin/software" class="block py-3 px-6 hover:bg-purple-700">💾 Software</a>
+                <a href="/admin/custom-orders" class="block py-3 px-6 hover:bg-purple-700">🎨 Custom Orders</a>
+                <a href="/admin/support-queries" class="block py-3 px-6 hover:bg-purple-700">❓ Support</a>
+                <a href="/admin/site-settings" class="block py-3 px-6 hover:bg-purple-700">⚙️ Site Settings</a>
+                <a href="/admin/logout" class="block py-3 px-6 hover:bg-red-700 mt-10">🚪 Logout</a>
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1 overflow-y-auto p-8">
+            <h1 class="text-3xl font-bold mb-8">📈 Sales Report</h1>
+            
+            <!-- Stats Summary -->
+            <div class="grid md:grid-cols-3 gap-6 mb-8">
+                <div class="bg-gradient-to-r from-green-400 to-green-600 text-white rounded-xl p-6">
+                    <div class="text-3xl mb-2">₹<%= daily.reduce((sum, d) => sum + d.total, 0) %></div>
+                    <div>Total Revenue</div>
+                </div>
+                <div class="bg-gradient-to-r from-blue-400 to-blue-600 text-white rounded-xl p-6">
+                    <div class="text-3xl mb-2"><%= daily.reduce((sum, d) => sum + d.count, 0) %></div>
+                    <div>Total Orders</div>
+                </div>
+                <div class="bg-gradient-to-r from-purple-400 to-purple-600 text-white rounded-xl p-6">
+                    <div class="text-3xl mb-2"><%= daily.length %></div>
+                    <div>Days with Sales</div>
+                </div>
+            </div>
+
+            <!-- Chart -->
+            <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
+                <h2 class="text-xl font-bold mb-4">Daily Sales Chart</h2>
+                <canvas id="salesChart" height="100"></canvas>
+            </div>
+
+            <!-- Data Table -->
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <h2 class="text-xl font-bold mb-4">Daily Sales Details</h2>
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-gray-100">
+                            <tr>
+                                <th class="p-3 text-left">Date</th>
+                                <th class="p-3 text-right">Orders</th>
+                                <th class="p-3 text-right">Revenue</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if(daily && daily.length > 0) { %>
+                                <% daily.forEach(day => { %>
+                                <tr class="border-b hover:bg-gray-50">
+                                    <td class="p-3"><%= day._id %></td>
+                                    <td class="p-3 text-right"><%= day.count %></td>
+                                    <td class="p-3 text-right font-bold text-green-600">₹<%= day.total %></td>
+                                </tr>
+                                <% }); %>
+                            <% } else { %>
+                                <tr>
+                                    <td colspan="3" class="p-3 text-center text-gray-500">No sales data available</td>
+                                </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Chart.js গ্রাফ তৈরি
+        const ctx = document.getElementById('salesChart').getContext('2d');
+        const dailyData = <%= JSON.stringify(daily) %>;
+        
+        const labels = dailyData.map(d => d._id);
+        const revenues = dailyData.map(d => d.total);
+        const orders = dailyData.map(d => d.count);
+        
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels.reverse(),
+                datasets: [
+                    {
+                        label: 'Revenue (₹)',
+                        data: revenues.reverse(),
+                        borderColor: 'rgb(34, 197, 94)',
+                        backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                        tension: 0.3,
+                        fill: true,
+                        yAxisID: 'y'
+                    },
+                    {
+                        label: 'Orders',
+                        data: orders.reverse(),
+                        borderColor: 'rgb(168, 85, 247)',
+                        backgroundColor: 'rgba(168, 85, 247, 0.1)',
+                        tension: 0.3,
+                        fill: true,
+                        yAxisID: 'y1'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                interaction: { mode: 'index', intersect: false },
+                plugins: { legend: { position: 'top' } },
+                scales: {
+                    y: { title: { display: true, text: 'Revenue (₹)' } },
+                    y1: { position: 'right', title: { display: true, text: 'Orders' } }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

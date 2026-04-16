@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Software Management - INDIAN WEB</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+    <div class="flex">
+        <div class="w-64 bg-purple-900 text-white min-h-screen p-6">
+            <h2 class="text-2xl font-bold">INDIAN WEB</h2>
+            <p class="text-sm">Admin Panel</p>
+            <nav class="mt-8">
+                <a href="/admin/dashboard" class="block py-2">Dashboard</a>
+                <a href="/admin/software" class="block py-2 bg-purple-700 px-2 rounded">Software</a>
+                <a href="/admin/site-settings" class="block py-2">Site Settings</a>
+                <a href="/admin/logout" class="block py-2 mt-10 text-red-300">Logout</a>
+            </nav>
+        </div>
+        
+        <div class="flex-1 p-8">
+            <h1 class="text-3xl font-bold mb-6">Software Management</h1>
+            
+            <!-- Add Software Form -->
+            <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
+                <h2 class="text-xl font-bold mb-4">Add New Software</h2>
+                <form action="/admin/software/add" method="POST" enctype="multipart/form-data" class="grid md:grid-cols-2 gap-4">
+                    <input type="text" name="name" placeholder="Software Name" required class="p-3 border rounded">
+                    <input type="text" name="slug" placeholder="Slug (unique)" required class="p-3 border rounded">
+                    <input type="text" name="price" placeholder="Price (₹)" required class="p-3 border rounded">
+                    <input type="text" name="category" placeholder="Category" class="p-3 border rounded">
+                    <input type="text" name="version" placeholder="Version" class="p-3 border rounded">
+                    <input type="url" name="demoUrl" placeholder="Demo URL" class="p-3 border rounded">
+                    <textarea name="description" placeholder="Description" rows="3" class="p-3 border rounded col-span-2"></textarea>
+                    <input type="file" name="softwareImage" accept="image/*" class="p-3 border rounded">
+                    <button type="submit" class="bg-green-600 text-white py-3 rounded font-bold">Add Software</button>
+                </form>
+            </div>
+            
+            <!-- Software List -->
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <h2 class="text-xl font-bold mb-4">All Software</h2>
+                <table class="w-full">
+                    <thead class="bg-gray-100"><tr><th class="p-3">Name</th><th>Price</th><th>Category</th><th>Actions</th></tr></thead>
+                    <tbody>
+                        <% software.forEach(item => { %>
+                        <tr class="border-b"><td class="p-3"><%= item.name %></td><td>₹<%= item.price %></td><td><%= item.category %></td><td><button onclick="deleteSoftware('<%= item._id %>')" class="bg-red-600 text-white px-3 py-1 rounded">Delete</button></td></tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <script>
+        function deleteSoftware(id) { if(confirm('Delete?')) fetch('/admin/software/delete/'+id, {method:'POST'}).then(()=>location.reload()); }
+    </script>
+</body>
+</html>

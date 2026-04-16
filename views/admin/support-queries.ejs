@@ -1,0 +1,9 @@
+<!DOCTYPE html>
+<html><head><title>Support Queries</title><script src="https://cdn.tailwindcss.com"></script></head>
+<body class="bg-gray-100"><div class="flex"><div class="w-64 bg-purple-900 text-white p-6"><h2>INDIAN WEB</h2></div><div class="flex-1 p-8">
+<h1 class="text-3xl font-bold mb-6">Support Queries</h1>
+<div class="bg-white rounded-xl p-6">
+<% queries.forEach(q => { %>
+<div class="border-b pb-4 mb-4"><p><strong><%= q.name %></strong> (<%= q.email %>) - <%= q.subject %></p><p><%= q.message %></p><% if(q.reply) { %><p class="text-green-600">Reply: <%= q.reply %></p><% } %><form action="/admin/support-queries/reply/<%= q._id %>" method="POST"><input type="text" name="reply" placeholder="Write reply..." class="border p-2 w-96"><button class="bg-blue-600 text-white px-3 py-1 rounded">Send Reply</button></form></div>
+<% }); %>
+</div></div></div></body></html>

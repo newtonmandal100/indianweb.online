@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Support - INDIAN WEB</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-50">
+
+    <div class="container mx-auto px-6 py-12">
+        <div class="text-center mb-12">
+            <h1 class="text-4xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">❓ Customer Support</h1>
+            <p class="text-gray-600 mt-2">We're here to help you 24/7</p>
+        </div>
+        
+        <div class="grid md:grid-cols-3 gap-8 mb-12">
+            <div class="bg-white rounded-xl shadow-lg p-6 text-center">
+                <div class="text-4xl text-purple-600 mb-3">📞</div>
+                <h3 class="text-xl font-bold">Call Us</h3>
+                <p class="text-gray-600"><%= portfolio?.contactPhone || '+91 98765 43210' %></p>
+                <p class="text-sm text-gray-500">Mon-Sat, 10AM-7PM</p>
+            </div>
+            <div class="bg-white rounded-xl shadow-lg p-6 text-center">
+                <div class="text-4xl text-purple-600 mb-3">✉️</div>
+                <h3 class="text-xl font-bold">Email Us</h3>
+                <p class="text-gray-600"><%= portfolio?.contactEmail || 'support@indianweb.com' %></p>
+                <p class="text-sm text-gray-500">24x7 Response</p>
+            </div>
+            <div class="bg-white rounded-xl shadow-lg p-6 text-center">
+                <div class="text-4xl text-purple-600 mb-3">💬</div>
+                <h3 class="text-xl font-bold">Live Chat</h3>
+                <p class="text-gray-600">Click bottom right</p>
+                <p class="text-sm text-gray-500">Instant Support</p>
+            </div>
+        </div>
+        
+        <div class="max-w-2xl mx-auto bg-white rounded-xl shadow-lg p-8">
+            <h2 class="text-2xl font-bold mb-6">Submit a Query</h2>
+            <form action="/support" method="POST">
+                <div class="grid md:grid-cols-2 gap-4 mb-4">
+                    <input type="text" name="name" placeholder="Your Name" required class="p-3 border rounded-lg">
+                    <input type="email" name="email" placeholder="Your Email" required class="p-3 border rounded-lg">
+                </div>
+                <input type="text" name="subject" placeholder="Subject" required class="w-full p-3 border rounded-lg mb-4">
+                <textarea name="message" rows="5" placeholder="Describe your issue..." required class="w-full p-3 border rounded-lg mb-4"></textarea>
+                <button type="submit" class="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 rounded-lg font-bold">Send Message</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

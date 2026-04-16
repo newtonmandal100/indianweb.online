@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - INDIAN WEB</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <div class="container mx-auto px-6 py-12">
+        <h1 class="text-4xl font-bold text-center mb-8 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">📞 Contact Us</h1>
+        
+        <div class="grid md:grid-cols-2 gap-12">
+            <div>
+                <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
+                    <h2 class="text-2xl font-bold mb-4">Get in Touch</h2>
+                    <div class="space-y-4">
+                        <p><i class="fas fa-map-marker-alt text-purple-600 w-6"></i> <%= portfolio?.contactAddress || 'New Delhi, India' %></p>
+                        <p><i class="fas fa-phone text-purple-600 w-6"></i> <%= portfolio?.contactPhone || '+91 98765 43210' %></p>
+                        <p><i class="fas fa-envelope text-purple-600 w-6"></i> <%= portfolio?.contactEmail || 'support@indianweb.com' %></p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h2 class="text-2xl font-bold mb-4">Office Hours</h2>
+                    <p>Monday - Friday: 9AM - 8PM</p>
+                    <p>Saturday: 10AM - 5PM</p>
+                    <p>Sunday: Closed</p>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow-lg p-8">
+                <h2 class="text-2xl font-bold mb-6">Send a Message</h2>
+                <form action="/support" method="POST">
+                    <input type="text" name="name" placeholder="Your Name" required class="w-full p-3 border rounded-lg mb-4">
+                    <input type="email" name="email" placeholder="Your Email" required class="w-full p-3 border rounded-lg mb-4">
+                    <input type="text" name="subject" placeholder="Subject" required class="w-full p-3 border rounded-lg mb-4">
+                    <textarea name="message" rows="5" placeholder="Your Message" required class="w-full p-3 border rounded-lg mb-4"></textarea>
+                    <button type="submit" class="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 rounded-lg font-bold">Send Message</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

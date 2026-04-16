@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html><head><title>Site Settings - Logo & Animation</title><script src="https://cdn.tailwindcss.com"></script><script src="https://code.jquery.com/jquery-3.6.0.min.js"></script></head>
+<body class="bg-gray-100">
+<div class="flex"><div class="w-64 bg-purple-900 text-white p-6"><h2>INDIAN WEB</h2><nav><a href="/admin/dashboard" class="block">Dashboard</a><a href="/admin/site-settings" class="block bg-purple-700">Site Settings</a></nav></div>
+<div class="flex-1 p-8">
+<h1 class="text-3xl font-bold mb-6">⚙️ Site Settings (Logo + Animation)</h1>
+
+<!-- Logo Upload -->
+<div class="bg-white rounded-xl shadow-lg p-6 mb-8">
+    <h2 class="text-xl font-bold mb-4">Logo Management</h2>
+    <div class="flex items-center space-x-6">
+        <img id="logoPreview" src="<%= siteSettings.logo %>" class="h-20 border rounded-lg">
+        <div><input type="file" id="logoInput" accept="image/*"><div id="logoStatus"></div></div>
+    </div>
+</div>
+
+<!-- Animation Settings -->
+<div class="bg-white rounded-xl shadow-lg p-6">
+    <h2 class="text-xl font-bold mb-4">Animation Settings</h2>
+    <form action="/admin/update-animation" method="POST">
+        <label>Hero Animation:</label><select name="heroAnimation" class="w-full p-2 border rounded mb-3"><option <%= siteSettings.heroAnimation==='fade-up'?'selected':'' %>>fade-up</option><option <%= siteSettings.heroAnimation==='zoom-in'?'selected':'' %>>zoom-in</option><option <%= siteSettings.heroAnimation==='none'?'selected':'' %>>none</option></select>
+        <label>Card Animation:</label><select name="cardAnimation" class="w-full p-2 border rounded mb-3"><option <%= siteSettings.cardAnimation==='fade-up'?'selected':'' %>>fade-up</option><option <%= siteSettings.cardAnimation==='zoom-in'?'selected':'' %>>zoom-in</option></select>
+        <label>Animation Speed (ms):</label><input type="number" name="animationSpeed" value="<%= siteSettings.animationSpeed %>" class="w-full p-2 border rounded mb-3">
+        <label>Background Animation:</label><select name="backgroundAnimation" class="w-full p-2 border rounded mb-3"><option <%= siteSettings.backgroundAnimation==='gradient-move'?'selected':'' %>>gradient-move</option><option <%= siteSettings.backgroundAnimation==='none'?'selected':'' %>>none</option></select>
+        <label>Custom CSS:</label><textarea name="customAnimationCSS" rows="4" class="w-full p-2 border rounded mb-3"><%= siteSettings.customAnimationCSS %></textarea>
+        <button type="submit" class="bg-purple-600 text-white py-2 rounded w-full">Save Animation</button>
+    </form>
+</div>
+
+<script>
+$('#logoInput').on('change', function() {
+    let fd = new FormData(); fd.append('logo', this.files[0]);
+    $.ajax({ url:'/admin/upload-logo', type:'POST', data:fd, processData:false, contentType:false, success:function(r){ if(r.success) $('#logoPreview').attr('src', r.logoUrl+'?t='+Date.now()); } });
+});
+</script>
+</div></div></body></html>
