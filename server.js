@@ -43,21 +43,24 @@ app.use(express.static('public'));
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-// Session - সঠিক কনফিগারেশন
+// Session কনফিগারেশন
 app.use(session({
   secret: process.env.SESSION_SECRET || 'mysecret',
   resave: false,
-  saveUninitialized: false,  // false করা ভালো
+  saveUninitialized: false,
   cookie: { secure: false, maxAge: 24 * 60 * 60 * 1000 }
 }));
 
-// Database Connection
+// Database Connection - Render এর জন্য সঠিক URI ব্যবহার করুন
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/indianweb';
+
+console.log('🔍 Connecting to MongoDB with URI:', MONGODB_URI.replace(/\/\/.*@/, '//<credentials>@')); // পাসওয়ার্ড লুকিয়ে দেখায়
+
 mongoose.connect(MONGODB_URI, {
-  serverSelectionTimeoutMS: 5000,
+  serverSelectionTimeoutMS: 10000,
   socketTimeoutMS: 45000,
 })
-.then(() => console.log('✅ MongoDB Connected'))
+.then(() => console.log('✅ MongoDB Connected Successfully'))
 .catch(err => console.log('❌ MongoDB Error:', err.message));
 
 // ============= MODELS =============
@@ -165,12 +168,17 @@ const SiteSetting = mongoose.model('SiteSetting', SiteSettingSchema);
 // ============= MIDDLEWARE =============
 
 app.use(async (req, res, next) => {
-  let siteSettings = await SiteSetting.findOne();
-  if (!siteSettings) {
-    siteSettings = new SiteSetting();
-    await siteSettings.save();
+  try {
+    let siteSettings = await SiteSetting.findOne();
+    if (!siteSettings) {
+      siteSettings = new SiteSetting();
+      await siteSettings.save();
+    }
+    res.locals.siteSettings = siteSettings;
+  } catch (error) {
+    console.log('SiteSettings error:', error.message);
+    res.locals.siteSettings = new SiteSetting();
   }
-  res.locals.siteSettings = siteSettings;
   next();
 });
 
@@ -178,6 +186,11 @@ function isAdmin(req, res, next) {
   if (req.session.userId && req.session.userRole === 'admin') return next();
   res.redirect('/admin/login');
 }
+
+// ============= PING ENDPOINT (Uptime Monitoring এর জন্য) =============
+app.get('/ping', (req, res) => {
+  res.status(200).send('OK');
+});
 
 // ============= CUSTOMER ROUTES =============
 
@@ -623,14 +636,15 @@ app.get('/admin/sales-report', isAdmin, async (req, res) => {
 // Create Test Admin
 app.get('/create-test-admin', async (req, res) => {
   try {
-    const existingAdmin = await User.findOne({ email: process.env.ADMIN_EMAIL || 'newtonmandal@indianweb.com' });
+    const adminEmail = process.env.ADMIN_EMAIL || 'newtonmandal@indianweb.com';
+    const existingAdmin = await User.findOne({ email: adminEmail });
     
     if (existingAdmin) {
       res.send('Admin user already exists!');
     } else {
       const admin = new User({
         name: 'Newton Mandal',
-        email: process.env.ADMIN_EMAIL || 'newtonmandal@indianweb.com',
+        email: adminEmail,
         phone: '9876543210',
         password: process.env.ADMIN_PASSWORD || 'Newton@2025',
         role: 'admin'
@@ -651,8 +665,5 @@ app.listen(PORT, '0.0.0.0', () => {
   console.log(`🔐 Admin Panel: http://localhost:${PORT}/admin/login`);
   console.log(`📧 Admin Email: ${process.env.ADMIN_EMAIL || 'newtonmandal@indianweb.com'}`);
   console.log(`🔑 Admin Password: ${process.env.ADMIN_PASSWORD || 'Newton@2025'}`);
-});
-// আপনার অন্যান্য সব app.get(...) রাউটের সাথে এটুকু যোগ করুন
-app.get('/ping', (req, res) => {
-  res.status(200).send('OK');
+  console.log(`✅ Server is ready to accept connections`);
 });
