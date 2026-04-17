@@ -652,3 +652,7 @@ app.listen(PORT, '0.0.0.0', () => {
   console.log(`📧 Admin Email: ${process.env.ADMIN_EMAIL || 'newtonmandal@indianweb.com'}`);
   console.log(`🔑 Admin Password: ${process.env.ADMIN_PASSWORD || 'Newton@2025'}`);
 });
+// আপনার অন্যান্য সব app.get(...) রাউটের সাথে এটুকু যোগ করুন
+app.get('/ping', (req, res) => {
+  res.status(200).send('OK');
+});
