@@ -2,57 +2,176 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Software Management - INDIAN WEB</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .btn-gradient {
+            background: linear-gradient(90deg, #f093fb 0%, #f5576c 100%);
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+    </style>
 </head>
 <body class="bg-gray-100">
-    <div class="flex">
-        <div class="w-64 bg-purple-900 text-white min-h-screen p-6">
-            <h2 class="text-2xl font-bold">INDIAN WEB</h2>
-            <p class="text-sm">Admin Panel</p>
+    <div class="flex min-h-screen">
+        <!-- Sidebar -->
+        <div class="w-64 bg-gradient-to-b from-purple-800 to-indigo-900 text-white shadow-xl">
+            <div class="p-6">
+                <h2 class="text-2xl font-bold">INDIAN WEB</h2>
+                <p class="text-sm opacity-75 mt-1">Admin: Newton Mandal</p>
+            </div>
             <nav class="mt-8">
-                <a href="/admin/dashboard" class="block py-2">Dashboard</a>
-                <a href="/admin/software" class="block py-2 bg-purple-700 px-2 rounded">Software</a>
-                <a href="/admin/site-settings" class="block py-2">Site Settings</a>
-                <a href="/admin/logout" class="block py-2 mt-10 text-red-300">Logout</a>
+                <a href="/admin/dashboard" class="flex items-center py-3 px-6 hover:bg-purple-700 transition">
+                    <i class="fas fa-chart-line w-5 mr-3"></i> Dashboard
+                </a>
+                <a href="/admin/software" class="flex items-center py-3 px-6 bg-purple-700 transition">
+                    <i class="fas fa-laptop-code w-5 mr-3"></i> Software
+                </a>
+                <a href="/admin/custom-orders" class="flex items-center py-3 px-6 hover:bg-purple-700 transition">
+                    <i class="fas fa-shopping-cart w-5 mr-3"></i> Custom Orders
+                </a>
+                <a href="/admin/support-queries" class="flex items-center py-3 px-6 hover:bg-purple-700 transition">
+                    <i class="fas fa-headset w-5 mr-3"></i> Support
+                </a>
+                <a href="/admin/portfolio" class="flex items-center py-3 px-6 hover:bg-purple-700 transition">
+                    <i class="fas fa-briefcase w-5 mr-3"></i> Portfolio
+                </a>
+                <a href="/admin/site-settings" class="flex items-center py-3 px-6 hover:bg-purple-700 transition">
+                    <i class="fas fa-cog w-5 mr-3"></i> Site Settings
+                </a>
+                <a href="/admin/logout" class="flex items-center py-3 px-6 mt-10 text-red-300 hover:bg-red-900 hover:text-white transition">
+                    <i class="fas fa-sign-out-alt w-5 mr-3"></i> Logout
+                </a>
             </nav>
         </div>
         
+        <!-- Main Content -->
         <div class="flex-1 p-8">
-            <h1 class="text-3xl font-bold mb-6">Software Management</h1>
+            <div class="flex justify-between items-center mb-6">
+                <h1 class="text-3xl font-bold text-gray-800">
+                    <i class="fas fa-laptop-code text-purple-600 mr-3"></i>Software Management
+                </h1>
+                <div class="text-sm text-gray-500">
+                    Total: <span class="font-bold text-purple-600"><%= software ? software.length : 0 %></span> software
+                </div>
+            </div>
             
             <!-- Add Software Form -->
-            <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
-                <h2 class="text-xl font-bold mb-4">Add New Software</h2>
+            <div class="bg-white rounded-2xl shadow-lg p-6 mb-8 card-hover">
+                <h2 class="text-xl font-bold mb-4 flex items-center">
+                    <i class="fas fa-plus-circle text-green-600 mr-2"></i> Add New Software
+                </h2>
                 <form action="/admin/software/add" method="POST" enctype="multipart/form-data" class="grid md:grid-cols-2 gap-4">
-                    <input type="text" name="name" placeholder="Software Name" required class="p-3 border rounded">
-                    <input type="text" name="slug" placeholder="Slug (unique)" required class="p-3 border rounded">
-                    <input type="text" name="price" placeholder="Price (₹)" required class="p-3 border rounded">
-                    <input type="text" name="category" placeholder="Category" class="p-3 border rounded">
-                    <input type="text" name="version" placeholder="Version" class="p-3 border rounded">
-                    <input type="url" name="demoUrl" placeholder="Demo URL" class="p-3 border rounded">
-                    <textarea name="description" placeholder="Description" rows="3" class="p-3 border rounded col-span-2"></textarea>
-                    <input type="file" name="softwareImage" accept="image/*" class="p-3 border rounded">
-                    <button type="submit" class="bg-green-600 text-white py-3 rounded font-bold">Add Software</button>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Software Name *</label>
+                        <input type="text" name="name" placeholder="e.g., Premium Accounting Software" required class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-purple-400">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Slug (URL) *</label>
+                        <input type="text" name="slug" placeholder="premium-accounting-software" required class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-purple-400">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Price (₹) *</label>
+                        <input type="number" name="price" placeholder="4999" required class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-purple-400">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Category</label>
+                        <input type="text" name="category" placeholder="Business, HR, Education" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-purple-400">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Version</label>
+                        <input type="text" name="version" placeholder="1.0.0" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-purple-400">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Demo URL</label>
+                        <input type="url" name="demoUrl" placeholder="https://demo.example.com" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-purple-400">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Description *</label>
+                        <textarea name="description" placeholder="Describe the software features and benefits..." rows="3" required class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-purple-400"></textarea>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Software Image</label>
+                        <input type="file" name="softwareImage" accept="image/*" class="w-full p-3 border rounded-lg">
+                        <p class="text-xs text-gray-500 mt-1">Leave empty to use default image</p>
+                    </div>
+                    <div class="md:col-span-2">
+                        <button type="submit" class="btn-gradient text-white py-3 rounded-lg font-bold w-full transition transform hover:scale-[1.02]">
+                            <i class="fas fa-save mr-2"></i> Add Software
+                        </button>
+                    </div>
                 </form>
             </div>
             
             <!-- Software List -->
-            <div class="bg-white rounded-xl shadow-lg p-6">
-                <h2 class="text-xl font-bold mb-4">All Software</h2>
-                <table class="w-full">
-                    <thead class="bg-gray-100"><tr><th class="p-3">Name</th><th>Price</th><th>Category</th><th>Actions</th></tr></thead>
-                    <tbody>
-                        <% software.forEach(item => { %>
-                        <tr class="border-b"><td class="p-3"><%= item.name %></td><td>₹<%= item.price %></td><td><%= item.category %></td><td><button onclick="deleteSoftware('<%= item._id %>')" class="bg-red-600 text-white px-3 py-1 rounded">Delete</button></td></tr>
-                        <% }); %>
-                    </tbody>
-                </table>
+            <div class="bg-white rounded-2xl shadow-lg p-6">
+                <h2 class="text-xl font-bold mb-4 flex items-center">
+                    <i class="fas fa-list text-purple-600 mr-2"></i> All Software
+                </h2>
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead>
+                            <tr class="bg-gray-100 border-b">
+                                <th class="p-3 text-left">Image</th>
+                                <th class="p-3 text-left">Name</th>
+                                <th class="p-3 text-left">Price</th>
+                                <th class="p-3 text-left">Category</th>
+                                <th class="p-3 text-left">Version</th>
+                                <th class="p-3 text-left">Status</th>
+                                <th class="p-3 text-left">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if(software && software.length > 0) { %>
+                                <% software.forEach(item => { %>
+                                <tr class="border-b hover:bg-gray-50 transition">
+                                    <td class="p-3">
+                                        <img src="<%= item.imageUrl || '/images/default-software.jpg' %>" class="w-12 h-12 object-cover rounded-lg" onerror="this.src='/images/default-software.jpg'">
+                                    </td>
+                                    <td class="p-3 font-medium"><%= item.name %></td>
+                                    <td class="p-3 text-purple-600 font-bold">₹<%= item.price %></td>
+                                    <td class="p-3"><span class="bg-gray-100 px-2 py-1 rounded text-sm"><%= item.category || 'Software' %></span></td>
+                                    <td class="p-3">v<%= item.version || '1.0' %></td>
+                                    <td class="p-3">
+                                        <span class="bg-green-100 text-green-700 px-2 py-1 rounded text-xs">Active</span>
+                                    </td>
+                                    <td class="p-3">
+                                        <button onclick="deleteSoftware('<%= item._id %>')" class="bg-red-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-red-700 transition">
+                                            <i class="fas fa-trash mr-1"></i> Delete
+                                        </button>
+                                    </td>
+                                </tr>
+                                <% }); %>
+                            <% } else { %>
+                                <tr>
+                                    <td colspan="7" class="p-8 text-center text-gray-500">
+                                        <i class="fas fa-folder-open text-4xl mb-2 block"></i>
+                                        No software added yet. Add your first software above!
+                                    </td>
+                                </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
+    
     <script>
-        function deleteSoftware(id) { if(confirm('Delete?')) fetch('/admin/software/delete/'+id, {method:'POST'}).then(()=>location.reload()); }
+        function deleteSoftware(id) {
+            if(confirm('Are you sure you want to delete this software?')) {
+                fetch('/admin/software/delete/' + id, { method: 'POST' })
+                    .then(() => location.reload())
+                    .catch(err => alert('Error deleting software'));
+            }
+        }
     </script>
 </body>
 </html>

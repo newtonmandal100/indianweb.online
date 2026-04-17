@@ -34,3 +34,66 @@ $('#logoInput').on('change', function() {
 });
 </script>
 </div></div></body></html>
+<!-- Logo Upload Section -->
+<div class="bg-white rounded-xl shadow-lg p-6 mb-8">
+    <h2 class="text-xl font-bold mb-4">🖼️ Logo Management</h2>
+    <div class="flex items-center space-x-8">
+        <div>
+            <img id="logoPreview" src="<%= siteSettings.logo || '/uploads/logo/default-logo.png' %>" alt="Current Logo" class="h-20 w-auto border rounded-lg p-2">
+            <p class="text-sm text-gray-500 mt-2">Current Logo</p>
+        </div>
+        <div>
+            <input type="file" id="logoInput" accept="image/*" class="block w-full text-sm text-gray-500">
+            <div id="logoStatus" class="text-sm mt-2"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Watermark Upload Section -->
+<div class="bg-white rounded-xl shadow-lg p-6 mb-8">
+    <h2 class="text-xl font-bold mb-4">💧 Watermark / Company Picture</h2>
+    <div class="flex items-center space-x-8">
+        <div>
+            <img id="watermarkPreview" src="<%= siteSettings.watermark || '/uploads/watermark/default-watermark.png' %>" alt="Current Watermark" class="h-32 w-auto border rounded-lg p-2">
+            <p class="text-sm text-gray-500 mt-2">Current Watermark</p>
+        </div>
+        <div>
+            <input type="file" id="watermarkInput" accept="image/*" class="block w-full text-sm text-gray-500">
+            <div id="watermarkStatus" class="text-sm mt-2"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Logo Upload
+$('#logoInput').on('change', function() {
+    let fd = new FormData();
+    fd.append('logo', this.files[0]);
+    $.ajax({
+        url: '/admin/upload-logo',
+        type: 'POST',
+        data: fd,
+        processData: false,
+        contentType: false,
+        success: function(r) {
+            if(r.success) $('#logoPreview').attr('src', r.logoUrl + '?t=' + Date.now());
+        }
+    });
+});
+
+// Watermark Upload
+$('#watermarkInput').on('change', function() {
+    let fd = new FormData();
+    fd.append('watermark', this.files[0]);
+    $.ajax({
+        url: '/admin/upload-watermark',
+        type: 'POST',
+        data: fd,
+        processData: false,
+        contentType: false,
+        success: function(r) {
+            if(r.success) $('#watermarkPreview').attr('src', r.watermarkUrl + '?t=' + Date.now());
+        }
+    });
+});
+</script>

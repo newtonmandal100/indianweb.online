@@ -8,59 +8,123 @@
     <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- সেফ চেক সহ স্টাইল -->
-    <% if(typeof siteSettings !== 'undefined' && siteSettings && siteSettings.customAnimationCSS) { %>
     <style>
-        <%= siteSettings.customAnimationCSS %>
-    </style>
-    <% } %>
-    
-    <% if(typeof siteSettings !== 'undefined' && siteSettings && siteSettings.backgroundAnimation === 'gradient-move') { %>
-    <style>
-        body {
-            background: linear-gradient(270deg, #667eea, #764ba2, #f093fb, #f5576c);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+        * { font-family: 'Poppins', sans-serif; }
+        
+        :root {
+            --indian-orange: #FF6B35;
+            --web-green: #00C853;
+            --primary-blue: #1E88E5;
+            --light-orange: #FFF5EB;
+            --light-green: #E8F5E9;
+            --white: #FFFFFF;
         }
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+        
+        .hero-gradient {
+            background: linear-gradient(135deg, var(--indian-orange) 0%, var(--web-green) 100%);
         }
-        .content-wrapper {
-            background: rgba(255,255,255,0.95);
-            backdrop-filter: blur(10px);
-        }
-        main > *:not(footer) {
-            background: rgba(255,255,255,0.95);
-            margin: 20px;
-            border-radius: 30px;
-            padding: 20px;
-        }
-    </style>
-    <% } %>
-    
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-        * { font-family: 'Inter', sans-serif; }
-        .gradient-bg {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-        .btn-gradient {
-            background: linear-gradient(90deg, #f093fb 0%, #f5576c 100%);
-        }
-        .card-hover {
+        
+        .btn-orange {
+            background: linear-gradient(90deg, var(--indian-orange) 0%, #FF8C42 100%);
             transition: all 0.3s ease;
         }
+        
+        .btn-orange:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255, 107, 53, 0.3);
+        }
+        
+        .btn-green {
+            background: linear-gradient(90deg, var(--web-green) 0%, #69F0AE 100%);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-green:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 200, 83, 0.3);
+        }
+        
+        .card-hover {
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+        
         .card-hover:hover {
             transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            border-color: var(--indian-orange);
         }
-        /* মোবাইল রেসপন্সিভ */
-        @media (max-width: 768px) {
-            .container { padding-left: 1rem; padding-right: 1rem; }
-            .text-5xl { font-size: 2rem; }
-            .text-7xl { font-size: 2.5rem; }
+        
+        .watermark-bg {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .indian-text {
+            color: var(--indian-orange);
+        }
+        
+        .web-text {
+            color: var(--web-green);
+        }
+        
+        .logo-img {
+            max-height: 60px;
+            object-fit: contain;
+        }
+        
+        .feature-card {
+            background: linear-gradient(135deg, var(--white) 0%, #f8f9fa 100%);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            background: linear-gradient(135deg, var(--light-orange) 0%, var(--light-green) 100%);
+        }
+        
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, var(--indian-orange) 0%, var(--web-green) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .feature-icon i {
+            font-size: 30px;
+            color: white;
+        }
+        
+        .nav-link {
+            position: relative;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--indian-orange), var(--web-green));
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        .nav-link:hover {
+            color: var(--indian-orange);
         }
     </style>
 </head>
@@ -68,139 +132,116 @@
 
     <!-- Navbar -->
     <nav class="bg-white shadow-lg sticky top-0 z-50">
-        <div class="container mx-auto px-4 md:px-6 py-4">
-            <div class="flex justify-between items-center flex-wrap gap-4">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
                 <div class="flex items-center space-x-3">
-                    <% if(typeof siteSettings !== 'undefined' && siteSettings && siteSettings.logo) { %>
-                    <img src="<%= siteSettings.logo %>" alt="<%= siteSettings.logoAlt || 'INDIAN WEB Logo' %>" 
-                         style="width: <%= siteSettings.logoWidth || 120 %>px; height: <%= siteSettings.logoHeight || 50 %>px; object-fit: contain;">
+                    <% if (typeof siteSettings !== 'undefined' && siteSettings && siteSettings.logo && siteSettings.logo !== '/uploads/logo/default-logo.png') { %>
+                        <img src="<%= siteSettings.logo %>" alt="INDIAN WEB Logo" class="logo-img">
                     <% } else { %>
-                    <div class="text-2xl font-bold">
-                        <span class="text-purple-600">INDIAN</span>
-                        <span class="text-pink-600">WEB</span>
-                    </div>
+                        <div class="text-3xl font-bold">
+                            <span class="indian-text">INDIAN</span>
+                            <span class="web-text">WEB</span>
+                        </div>
                     <% } %>
                 </div>
-                <div class="hidden md:flex space-x-6 lg:space-x-8">
-                    <a href="/" class="text-gray-700 hover:text-purple-600 transition font-medium">Home</a>
-                    <a href="/store" class="text-gray-700 hover:text-purple-600 transition font-medium">Store</a>
-                    <a href="/custom-order" class="text-gray-700 hover:text-purple-600 transition font-medium">Custom Order</a>
-                    <a href="/support" class="text-gray-700 hover:text-purple-600 transition font-medium">Support</a>
-                    <a href="/contact" class="text-gray-700 hover:text-purple-600 transition font-medium">Contact</a>
+                <div class="hidden md:flex space-x-8">
+                    <a href="/" class="nav-link text-gray-700 font-medium">Home</a>
+                    <a href="/store" class="nav-link text-gray-700 font-medium">Store</a>
+                    <a href="/custom-order" class="nav-link text-gray-700 font-medium">Custom Order</a>
+                    <a href="/support" class="nav-link text-gray-700 font-medium">Support</a>
+                    <a href="/contact" class="nav-link text-gray-700 font-medium">Contact</a>
                 </div>
                 <div class="flex items-center space-x-4">
                     <a href="/cart" class="relative text-2xl">
                         🛒
                         <span id="cartCount" class="absolute -top-2 -right-4 bg-red-500 text-white rounded-full px-1.5 py-0.5 text-xs">0</span>
                     </a>
-                    <% if(user && user.userId) { %>
-                        <span class="text-gray-700 hidden sm:inline">👋 <%= user.userName %></span>
+                    <% if (typeof user !== 'undefined' && user && user.userId) { %>
+                        <span class="text-gray-700">👋 <%= user.userName %></span>
                         <a href="/logout" class="text-red-500 hover:text-red-700">Logout</a>
                     <% } else { %>
-                        <a href="/login" class="btn-gradient text-white px-4 py-2 rounded-lg">Login</a>
+                        <a href="/login" class="btn-orange text-white px-4 py-2 rounded-lg">Login</a>
                     <% } %>
                 </div>
-            </div>
-            <!-- মোবাইল মেনু টগল -->
-            <div class="md:hidden flex justify-center mt-3 space-x-4">
-                <a href="/" class="text-gray-700 text-sm">Home</a>
-                <a href="/store" class="text-gray-700 text-sm">Store</a>
-                <a href="/custom-order" class="text-gray-700 text-sm">Custom</a>
-                <a href="/support" class="text-gray-700 text-sm">Support</a>
             </div>
         </div>
     </nav>
 
-    <main>
-        <!-- Hero Section -->
-        <section class="gradient-bg text-white py-16 md:py-24 rounded-3xl mx-4 md:mx-6 mt-6"
-                 data-aos="<%= (typeof siteSettings !== 'undefined' && siteSettings) ? siteSettings.heroAnimation : 'fade-up' %>" 
-                 data-aos-duration="<%= (typeof siteSettings !== 'undefined' && siteSettings) ? siteSettings.animationSpeed : 1000 %>">
-            <div class="container mx-auto px-4 md:px-6 text-center">
-                <h1 class="text-4xl md:text-7xl font-bold mb-4 md:mb-6">
-                    <%= (portfolio && portfolio.heroTitle) ? portfolio.heroTitle : 'Premium Software Solutions' %>
-                </h1>
-                <p class="text-lg md:text-2xl mb-8 md:mb-10 opacity-90">
-                    <%= (portfolio && portfolio.heroSubtitle) ? portfolio.heroSubtitle : 'Download high-quality software for your business' %>
-                </p>
-                <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                    <a href="/store" class="bg-white text-purple-600 px-6 md:px-8 py-3 rounded-full font-semibold hover:shadow-xl transition transform hover:scale-105 inline-block">
-                        🚀 Explore Store
-                    </a>
-                    <a href="/custom-order" class="border-2 border-white px-6 md:px-8 py-3 rounded-full font-semibold hover:bg-white hover:text-purple-600 transition inline-block">
-                        📝 Request Custom Software
-                    </a>
+    <!-- Hero Section -->
+    <section class="hero-gradient text-white py-24 rounded-3xl mx-6 mt-6" data-aos="fade-up" data-aos-duration="1000">
+        <div class="container mx-auto px-6 text-center">
+            <h1 class="text-5xl md:text-7xl font-bold mb-6">
+                <%= (typeof portfolio !== 'undefined' && portfolio && portfolio.heroTitle) ? portfolio.heroTitle : 'Premium Software Solutions' %>
+            </h1>
+            <p class="text-xl md:text-2xl mb-10 opacity-90">
+                <%= (typeof portfolio !== 'undefined' && portfolio && portfolio.heroSubtitle) ? portfolio.heroSubtitle : 'Download high-quality software for your business' %>
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="/store" class="bg-white text-orange-600 px-8 py-3 rounded-full font-semibold hover:shadow-xl transition transform hover:scale-105 inline-block">
+                    🚀 Explore Store
+                </a>
+                <a href="/custom-order" class="border-2 border-white px-8 py-3 rounded-full font-semibold hover:bg-white hover:text-orange-600 transition inline-block">
+                    📝 Request Custom Software
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="py-16 rounded-3xl mx-6 my-6 bg-white shadow-xl">
+        <div class="container mx-auto px-6">
+            <div class="grid md:grid-cols-3 gap-8 text-center">
+                <div class="p-6" data-aos="zoom-in">
+                    <div class="feature-icon w-20 h-20 mx-auto mb-4">
+                        <i class="fas fa-box text-3xl"></i>
+                    </div>
+                    <div class="text-3xl font-bold indian-text"><%= (typeof stats !== 'undefined' && stats) ? stats.totalSoftware : 0 %></div>
+                    <div class="text-gray-600">Software Products</div>
+                </div>
+                <div class="p-6" data-aos="zoom-in" data-aos-delay="100">
+                    <div class="feature-icon w-20 h-20 mx-auto mb-4">
+                        <i class="fas fa-users text-3xl"></i>
+                    </div>
+                    <div class="text-3xl font-bold web-text"><%= (typeof stats !== 'undefined' && stats) ? stats.totalCustomers : 0 %></div>
+                    <div class="text-gray-600">Happy Customers</div>
+                </div>
+                <div class="p-6" data-aos="zoom-in" data-aos-delay="200">
+                    <div class="feature-icon w-20 h-20 mx-auto mb-4">
+                        <i class="fas fa-chart-line text-3xl"></i>
+                    </div>
+                    <div class="text-3xl font-bold text-blue-600"><%= (typeof stats !== 'undefined' && stats) ? stats.totalOrders : 0 %></div>
+                    <div class="text-gray-600">Orders Completed</div>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- Stats Section -->
-        <section class="py-12 md:py-16 rounded-3xl mx-4 md:mx-6 my-6 bg-white shadow-xl">
-            <div class="container mx-auto px-4 md:px-6">
-                <div class="grid md:grid-cols-3 gap-6 md:gap-8 text-center">
-                    <div class="p-4 md:p-6" data-aos="zoom-in">
-                        <div class="text-4xl md:text-5xl text-purple-600 mb-2">📦</div>
-                        <div class="text-2xl md:text-3xl font-bold"><%= stats && stats.totalSoftware ? stats.totalSoftware : 0 %></div>
-                        <div class="text-gray-600">Software Products</div>
-                    </div>
-                    <div class="p-4 md:p-6" data-aos="zoom-in" data-aos-delay="100">
-                        <div class="text-4xl md:text-5xl text-pink-600 mb-2">👥</div>
-                        <div class="text-2xl md:text-3xl font-bold"><%= stats && stats.totalCustomers ? stats.totalCustomers : 0 %></div>
-                        <div class="text-gray-600">Happy Customers</div>
-                    </div>
-                    <div class="p-4 md:p-6" data-aos="zoom-in" data-aos-delay="200">
-                        <div class="text-4xl md:text-5xl text-indigo-600 mb-2">📝</div>
-                        <div class="text-2xl md:text-3xl font-bold"><%= stats && stats.totalOrders ? stats.totalOrders : 0 %></div>
-                        <div class="text-gray-600">Orders Completed</div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Featured Software -->
-        <section class="py-16 md:py-20 rounded-3xl mx-4 md:mx-6 my-6 bg-white shadow-xl">
-            <div class="container mx-auto px-4 md:px-6">
-                <h2 class="text-3xl md:text-4xl font-bold text-center mb-8 md:mb-12">
-                    <span class="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-                        ⭐ Featured Software
-                    </span>
-                </h2>
-                
-                <% if(featuredSoftware && featuredSoftware.length > 0) { %>
-                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-                    <% featuredSoftware.forEach((software, index) => { 
-                        // সেফ ডিসপ্লের জন্য ভেরিয়েবল চেক
-                        var softwareName = software.name || 'Software';
-                        var softwareDesc = software.description || 'No description available';
-                        var softwareDescShort = softwareDesc.length > 100 ? softwareDesc.substring(0, 100) + '...' : softwareDesc;
-                        var softwarePrice = typeof software.price === 'number' ? software.price : 0;
-                        var softwareImage = software.imageUrl || '/images/default-software.jpg';
-                        var softwareDemoUrl = software.demoUrl || null;
-                        var discountedPrice = Math.round(softwarePrice * 1.5);
-                    %>
-                    <div class="bg-gradient-to-br from-gray-50 to-white rounded-2xl shadow-lg overflow-hidden card-hover border border-gray-100"
-                         data-aos="<%= (typeof siteSettings !== 'undefined' && siteSettings) ? siteSettings.cardAnimation : 'fade-up' %>" 
-                         data-aos-duration="<%= (typeof siteSettings !== 'undefined' && siteSettings) ? siteSettings.animationSpeed : 1000 %>"
-                         data-aos-delay="<%= index * 100 %>">
-                        <img src="<%= softwareImage %>" alt="<%= softwareName %>" class="w-full h-48 md:h-56 object-cover" onerror="this.src='/images/default-software.jpg'">
-                        <div class="p-4 md:p-6">
-                            <h3 class="text-lg md:text-xl font-bold mb-2"><%= softwareName %></h3>
-                            <p class="text-gray-600 text-sm md:text-base mb-4"><%= softwareDescShort %></p>
-                            <div class="flex justify-between items-center flex-wrap gap-2">
+    <!-- Featured Software -->
+    <section class="py-20 rounded-3xl mx-6 my-6 bg-white shadow-xl">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl font-bold text-center mb-12">
+                <span class="indian-text">⭐ Featured</span>
+                <span class="web-text"> Software</span>
+            </h2>
+            <div class="grid md:grid-cols-3 gap-8">
+                <% if (typeof featuredSoftware !== 'undefined' && featuredSoftware && featuredSoftware.length > 0) { %>
+                    <% featuredSoftware.forEach(function(software, index) { %>
+                    <div class="bg-white rounded-2xl shadow-lg overflow-hidden card-hover" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="<%= index * 100 %>">
+                        <img src="<%= software.imageUrl || '/images/default-software.jpg' %>" alt="<%= software.name %>" class="w-full h-56 object-cover" onerror="this.src='/images/default-software.jpg'">
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold mb-2"><%= software.name %></h3>
+                            <p class="text-gray-600 mb-4"><%= software.description ? software.description.substring(0, 100) : 'No description' %>...</p>
+                            <div class="flex justify-between items-center">
                                 <div>
-                                    <span class="text-xl md:text-2xl font-bold text-purple-600">₹<%= softwarePrice %></span>
-                                    <% if(softwarePrice > 0) { %>
-                                    <span class="text-xs md:text-sm text-gray-500 line-through ml-2">₹<%= discountedPrice %></span>
-                                    <% } %>
+                                    <span class="text-2xl font-bold indian-text">₹<%= software.price %></span>
                                 </div>
-                                <div class="flex space-x-2">
-                                    <% if(softwareDemoUrl) { %>
-                                    <a href="<%= softwareDemoUrl %>" target="_blank" class="text-blue-500 hover:text-blue-700 text-sm">
+                                <div class="space-x-2">
+                                    <% if (software.demoUrl) { %>
+                                    <a href="<%= software.demoUrl %>" target="_blank" class="text-blue-500 hover:text-blue-700">
                                         <i class="fas fa-eye"></i> Demo
                                     </a>
                                     <% } %>
-                                    <button onclick="addToCart('<%= software._id %>', '<%= softwareName.replace(/'/g, "\\'") %>', <%= softwarePrice %>)" 
-                                            class="btn-gradient text-white px-3 md:px-4 py-1 md:py-2 rounded-lg hover:opacity-90 transition text-sm">
+                                    <button onclick="addToCart('<%= software._id %>', '<%= software.name.replace(/'/g, "\\'") %>', <%= software.price %>)" class="btn-orange text-white px-4 py-2 rounded-lg transition">
                                         Buy Now
                                     </button>
                                 </div>
@@ -208,161 +249,138 @@
                         </div>
                     </div>
                     <% }); %>
-                </div>
                 <% } else { %>
-                <div class="text-center py-12">
-                    <p class="text-gray-500">No software available yet.</p>
-                </div>
+                    <div class="col-span-3 text-center py-12">
+                        <p class="text-gray-500">No featured software available.</p>
+                    </div>
                 <% } %>
-                
-                <div class="text-center mt-10 md:mt-12">
-                    <a href="/store" class="btn-gradient text-white px-6 md:px-8 py-3 rounded-full font-semibold hover:shadow-xl transition inline-block">
-                        View All Software <i class="fas fa-arrow-right ml-2"></i>
-                    </a>
-                </div>
             </div>
-        </section>
+            <div class="text-center mt-12">
+                <a href="/store" class="btn-green text-white px-8 py-3 rounded-full font-semibold hover:shadow-xl transition inline-block">
+                    View All Software <i class="fas fa-arrow-right ml-2"></i>
+                </a>
+            </div>
+        </div>
+    </section>
 
-        <!-- Services Section -->
-        <section class="py-16 md:py-20 rounded-3xl mx-4 md:mx-6 my-6 bg-white shadow-xl">
-            <div class="container mx-auto px-4 md:px-6">
-                <h2 class="text-3xl md:text-4xl font-bold text-center mb-8 md:mb-12">
-                    <span class="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-                        🎯 Our Services
-                    </span>
-                </h2>
-                <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                    <div class="text-center p-4 md:p-6" data-aos="fade-up">
-                        <div class="text-4xl md:text-5xl mb-4">💻</div>
-                        <h3 class="text-lg md:text-xl font-bold mb-2">Custom Software</h3>
-                        <p class="text-gray-600 text-sm">Tailored solutions for your business needs</p>
+    <!-- Services Section -->
+    <section class="py-20 rounded-3xl mx-6 my-6 bg-white shadow-xl">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl font-bold text-center mb-12">
+                <span class="indian-text">🎯 Our</span>
+                <span class="web-text"> Services</span>
+            </h2>
+            <div class="grid md:grid-cols-4 gap-6">
+                <div class="feature-card" data-aos="fade-up">
+                    <div class="feature-icon">
+                        <i class="fas fa-laptop-code text-2xl"></i>
                     </div>
-                    <div class="text-center p-4 md:p-6" data-aos="fade-up" data-aos-delay="100">
-                        <div class="text-4xl md:text-5xl mb-4">🔧</div>
-                        <h3 class="text-lg md:text-xl font-bold mb-2">24/7 Support</h3>
-                        <p class="text-gray-600 text-sm">Round the clock technical assistance</p>
+                    <h3 class="text-xl font-bold mb-2">Custom Software</h3>
+                    <p class="text-gray-600">Tailored solutions for your business needs</p>
+                </div>
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="feature-icon">
+                        <i class="fas fa-headset text-2xl"></i>
                     </div>
-                    <div class="text-center p-4 md:p-6" data-aos="fade-up" data-aos-delay="200">
-                        <div class="text-4xl md:text-5xl mb-4">☁️</div>
-                        <h3 class="text-lg md:text-xl font-bold mb-2">Cloud Integration</h3>
-                        <p class="text-gray-600 text-sm">Seamless cloud deployment</p>
+                    <h3 class="text-xl font-bold mb-2">24/7 Support</h3>
+                    <p class="text-gray-600">Round the clock technical assistance</p>
+                </div>
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="feature-icon">
+                        <i class="fas fa-cloud text-2xl"></i>
                     </div>
-                    <div class="text-center p-4 md:p-6" data-aos="fade-up" data-aos-delay="300">
-                        <div class="text-4xl md:text-5xl mb-4">🔒</div>
-                        <h3 class="text-lg md:text-xl font-bold mb-2">Secure Payment</h3>
-                        <p class="text-gray-600 text-sm">100% secure transactions</p>
+                    <h3 class="text-xl font-bold mb-2">Cloud Integration</h3>
+                    <p class="text-gray-600">Seamless cloud deployment</p>
+                </div>
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="300">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt text-2xl"></i>
                     </div>
+                    <h3 class="text-xl font-bold mb-2">Secure Payment</h3>
+                    <p class="text-gray-600">100% secure transactions</p>
                 </div>
             </div>
-        </section>
-    </main>
+        </div>
+    </section>
 
     <!-- Footer -->
-    <footer class="bg-gray-900 text-white py-10 md:py-12 mt-12">
-        <div class="container mx-auto px-4 md:px-6">
-            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+    <footer class="bg-gray-900 text-white py-12 mt-12">
+        <div class="container mx-auto px-6">
+            <div class="grid md:grid-cols-4 gap-8">
                 <div>
-                    <h3 class="text-xl md:text-2xl font-bold mb-4">INDIAN WEB</h3>
-                    <p class="text-gray-400 text-sm">Premium software solutions for modern businesses.</p>
+                    <h3 class="text-2xl font-bold mb-4">
+                        <span class="indian-text">INDIAN</span>
+                        <span class="web-text">WEB</span>
+                    </h3>
+                    <p class="text-gray-400">Premium software solutions for modern businesses.</p>
                     <div class="flex space-x-4 mt-4">
-                        <a href="#" class="text-gray-400 hover:text-white text-xl"><i class="fab fa-facebook"></i></a>
-                        <a href="#" class="text-gray-400 hover:text-white text-xl"><i class="fab fa-twitter"></i></a>
-                        <a href="#" class="text-gray-400 hover:text-white text-xl"><i class="fab fa-instagram"></i></a>
-                        <a href="#" class="text-gray-400 hover:text-white text-xl"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-orange-500 text-xl"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-orange-500 text-xl"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-orange-500 text-xl"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-orange-500 text-xl"><i class="fab fa-linkedin"></i></a>
                     </div>
                 </div>
                 <div>
-                    <h4 class="font-bold mb-4">Quick Links</h4>
-                    <ul class="space-y-2 text-gray-400 text-sm">
-                        <li><a href="/store" class="hover:text-white">📦 Store</a></li>
-                        <li><a href="/custom-order" class="hover:text-white">🎨 Custom Order</a></li>
-                        <li><a href="/support" class="hover:text-white">❓ Support</a></li>
-                        <li><a href="/contact" class="hover:text-white">📞 Contact</a></li>
+                    <h4 class="font-bold mb-4 text-orange-400">Quick Links</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="/store" class="hover:text-green-400">📦 Store</a></li>
+                        <li><a href="/custom-order" class="hover:text-green-400">🎨 Custom Order</a></li>
+                        <li><a href="/support" class="hover:text-green-400">❓ Support</a></li>
+                        <li><a href="/contact" class="hover:text-green-400">📞 Contact</a></li>
                     </ul>
                 </div>
                 <div>
-                    <h4 class="font-bold mb-4">Contact Info</h4>
-                    <ul class="space-y-2 text-gray-400 text-sm">
-                        <li><i class="fas fa-phone mr-2"></i> <%= (portfolio && portfolio.contactPhone) ? portfolio.contactPhone : '+91 98765 43210' %></li>
-                        <li><i class="fas fa-envelope mr-2"></i> <%= (portfolio && portfolio.contactEmail) ? portfolio.contactEmail : 'support@indianweb.com' %></li>
-                        <li><i class="fas fa-map-marker-alt mr-2"></i> <%= (portfolio && portfolio.contactAddress) ? portfolio.contactAddress : 'New Delhi, India' %></li>
+                    <h4 class="font-bold mb-4 text-green-400">Contact Info</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><i class="fas fa-phone mr-2 text-orange-400"></i> <%= (typeof portfolio !== 'undefined' && portfolio && portfolio.contactPhone) ? portfolio.contactPhone : '+91 98765 43210' %></li>
+                        <li><i class="fas fa-envelope mr-2 text-orange-400"></i> <%= (typeof portfolio !== 'undefined' && portfolio && portfolio.contactEmail) ? portfolio.contactEmail : 'support@indianweb.com' %></li>
+                        <li><i class="fas fa-map-marker-alt mr-2 text-orange-400"></i> <%= (typeof portfolio !== 'undefined' && portfolio && portfolio.contactAddress) ? portfolio.contactAddress : 'New Delhi, India' %></li>
                     </ul>
                 </div>
                 <div>
-                    <h4 class="font-bold mb-4">Secure Payments</h4>
-                    <div class="flex space-x-3 text-2xl md:text-3xl">
+                    <h4 class="font-bold mb-4 text-blue-400">Secure Payments</h4>
+                    <div class="flex space-x-4 text-3xl">
                         <span>💳</span> <span>📱</span> <span>🏦</span> <span>🪪</span>
                     </div>
-                    <p class="text-gray-400 text-xs md:text-sm mt-4">100% Secure Transactions</p>
+                    <p class="text-gray-400 text-sm mt-4">100% Secure Transactions</p>
                 </div>
             </div>
-            <div class="border-t border-gray-800 mt-8 pt-6 md:pt-8 text-center text-gray-500 text-sm">
-                <p>&copy; 2025 INDIAN WEB. All rights reserved. Designed with ❤️ for India</p>
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-500">
+                <p>&copy; 2025 <span class="indian-text">INDIAN</span><span class="web-text">WEB</span>. All rights reserved. Designed with ❤️ for India</p>
             </div>
         </div>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
     <script>
-        // AOS initialization with safe check
-        if(typeof AOS !== 'undefined') {
-            AOS.init({
-                duration: <%= (typeof siteSettings !== 'undefined' && siteSettings) ? siteSettings.animationSpeed : 1000 %>,
-                once: true
-            });
-        }
+        AOS.init({ duration: 1000, once: true });
         
-        // Cart count update function
         function updateCartCount() {
             fetch('/api/cart-count')
-                .then(res => res.json())
-                .then(data => {
-                    const cartSpan = document.getElementById('cartCount');
-                    if(cartSpan) {
-                        cartSpan.innerText = data.count || 0;
-                    }
+                .then(function(res) { return res.json(); })
+                .then(function(data) {
+                    document.getElementById('cartCount').innerText = data.count || 0;
                 })
-                .catch(err => {
-                    console.log('Cart API not ready yet');
-                    // Fallback: local storage থেকে দেখুন
-                    const localCart = JSON.parse(localStorage.getItem('cart') || '[]');
-                    const cartSpan = document.getElementById('cartCount');
-                    if(cartSpan) cartSpan.innerText = localCart.length;
-                });
+                .catch(function() {});
         }
         
-        // Add to cart function
         function addToCart(id, name, price) {
-            // Local storage backup
-            let cart = JSON.parse(localStorage.getItem('cart') || '[]');
-            cart.push({ id, name, price });
-            localStorage.setItem('cart', JSON.stringify(cart));
-            
-            // Server এ পাঠানোর চেষ্টা
             fetch('/add-to-cart', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ softwareId: id, name, price })
-            }).then(res => res.json()).then(data => {
+                body: JSON.stringify({ softwareId: id, name: name, price: price })
+            }).then(function(res) { return res.json(); }).then(function(data) {
                 if(data.success) {
                     updateCartCount();
                     alert('✅ ' + name + ' added to cart!');
                 }
-            }).catch(err => {
-                // সার্ভার না থাকলেও লোকালি কাজ করবে
+            }).catch(function() {
+                alert('✅ ' + name + ' added to cart!');
                 updateCartCount();
-                alert('✅ ' + name + ' added to cart (offline mode)!');
             });
         }
         
-        // Page load এ cart count আপডেট
-        document.addEventListener('DOMContentLoaded', function() {
-            updateCartCount();
-        });
-        
-        <% if(typeof siteSettings !== 'undefined' && siteSettings && siteSettings.backgroundAnimation === 'particle') { %>
-        console.log('Particle animation enabled');
-        <% } %>
+        updateCartCount();
     </script>
 </body>
 </html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - INDIAN WEB</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .btn-orange { background: linear-gradient(90deg, #FF6B35 0%, #FF8C42 100%); }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="min-h-screen flex items-center justify-center">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md">
+            <div class="text-center mb-8">
+                <h1 class="text-3xl font-bold">
+                    <span class="text-orange-500">INDIAN</span>
+                    <span class="text-green-500">WEB</span>
+                </h1>
+                <p class="text-gray-500 mt-2">Create new account</p>
+            </div>
+            
+            <% if (typeof error !== 'undefined' && error) { %>
+            <div class="bg-red-100 text-red-700 p-3 rounded-lg mb-4">Registration failed! Email may already exist.</div>
+            <% } %>
+            
+            <form action="/register" method="POST">
+                <input type="text" name="name" placeholder="Full Name" required class="w-full p-3 border rounded-lg mb-4">
+                <input type="email" name="email" placeholder="Email Address" required class="w-full p-3 border rounded-lg mb-4">
+                <input type="tel" name="phone" placeholder="Phone Number" class="w-full p-3 border rounded-lg mb-4">
+                <input type="password" name="password" placeholder="Password" required class="w-full p-3 border rounded-lg mb-6">
+                <button type="submit" class="w-full btn-orange text-white py-3 rounded-lg font-bold">Register</button>
+            </form>
+            
+            <div class="text-center mt-6">
+                <p class="text-gray-500">Already have an account? <a href="/login" class="text-orange-500">Login</a></p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
