@@ -6,10 +6,21 @@ const dotenv = require('dotenv');
 const Razorpay = require('razorpay');
 const multer = require('multer');
 const fs = require('fs');
+const compression = require('compression');
 
 dotenv.config();
 
 const app = express();
+
+// Compression middleware (faster responses)
+app.use(compression());
+
+// Static files caching
+app.use(express.static('public', {
+  maxAge: '1y',
+  immutable: true,
+  etag: true
+}));
 
 // ফাইল আপলোড কনফিগারেশন
 const storage = multer.diskStorage({
@@ -19,6 +30,10 @@ const storage = multer.diskStorage({
     else if (file.fieldname === 'animation') uploadPath += 'animations/';
     else if (file.fieldname === 'softwareImage') uploadPath += 'software-images/';
     else if (file.fieldname === 'watermark') uploadPath += 'watermark/';
+    else if (file.fieldname === 'heroBackground') uploadPath += 'hero-bg/';
+    else if (file.fieldname === 'statsBackground') uploadPath += 'section-bg/';
+    else if (file.fieldname === 'featuredBackground') uploadPath += 'section-bg/';
+    else if (file.fieldname === 'servicesBackground') uploadPath += 'section-bg/';
     
     if (!fs.existsSync(uploadPath)) {
       fs.mkdirSync(uploadPath, { recursive: true });
@@ -39,7 +54,6 @@ const upload = multer({
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static('public'));
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
@@ -51,13 +65,28 @@ app.use(session({
   cookie: { secure: false, maxAge: 24 * 60 * 60 * 1000 }
 }));
 
+// ============= KEEP ALIVE ENDPOINT (Render sleep prevention) =============
+app.get('/keep-alive', (req, res) => {
+  res.status(200).send('OK');
+});
+
+// Auto ping every 10 minutes
+const RENDER_URL = process.env.RENDER_EXTERNAL_URL || 'https://indianweb.onrender.com';
+setInterval(() => {
+  fetch(`${RENDER_URL}/keep-alive`)
+    .then(() => console.log('✅ Keep-alive ping successful at', new Date().toLocaleTimeString()))
+    .catch(err => console.log('❌ Keep-alive ping failed:', err.message));
+}, 10 * 60 * 1000);
+
 // Database Connection
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/indianweb';
 console.log('🔍 Connecting to MongoDB...');
 
 mongoose.connect(MONGODB_URI, {
-  serverSelectionTimeoutMS: 10000,
-  socketTimeoutMS: 45000,
+  serverSelectionTimeoutMS: 5000,
+  socketTimeoutMS: 30000,
+  maxPoolSize: 10,
+  minPoolSize: 2
 })
 .then(() => console.log('✅ MongoDB Connected Successfully'))
 .catch(err => console.log('❌ MongoDB Error:', err.message));
@@ -160,9 +189,13 @@ const Portfolio = mongoose.model('Portfolio', PortfolioSchema);
 const SiteSettingSchema = new mongoose.Schema({
   logo: { type: String, default: '/uploads/logo/default-logo.png' },
   watermark: { type: String, default: '/uploads/watermark/default-watermark.png' },
+  heroBackground: { type: String, default: '' },
+  statsBackground: { type: String, default: '' },
+  featuredBackground: { type: String, default: '' },
+  servicesBackground: { type: String, default: '' },
   logoAlt: { type: String, default: 'INDIAN WEB Logo' },
-  logoWidth: { type: Number, default: 150 },
-  logoHeight: { type: Number, default: 50 },
+  logoWidth: { type: Number, default: 80 },
+  logoHeight: { type: Number, default: 80 },
   heroAnimation: { type: String, default: 'fade-up' },
   cardAnimation: { type: String, default: 'fade-up' },
   animationSpeed: { type: Number, default: 1000 },
@@ -408,50 +441,70 @@ app.get('/register', (req, res) => {
   res.render('customer/register', { error: req.query.error, user: req.session });
 });
 
-app.post('/login', async (req, res) => {
-  const { email, password } = req.body;
-  try {
-    const user = await User.findOne({ email: email.trim().toLowerCase() });
-    
-    if (user && user.password === password) {
-      req.session.userId = user._id;
-      req.session.userRole = user.role;
-      req.session.userName = user.name;
-      req.session.userEmail = user.email;
-      res.redirect('/');
-    } else {
-      res.redirect('/login?error=1');
-    }
-  } catch (error) {
-    res.redirect('/login?error=1');
-  }
-});
-
 app.post('/register', async (req, res) => {
   const { name, email, phone, password } = req.body;
+  
+  console.log('Registration attempt:', { name, email });
+  
   try {
     const existingUser = await User.findOne({ email: email.trim().toLowerCase() });
     
     if (existingUser) {
-      res.redirect('/register?error=1');
-    } else {
-      const newUser = new User({ 
-        name: name.trim(), 
-        email: email.trim().toLowerCase(), 
-        phone: phone || '', 
-        password: password, 
-        role: 'customer' 
-      });
-      await newUser.save();
-      
-      req.session.userId = newUser._id;
-      req.session.userRole = 'customer';
-      req.session.userName = newUser.name;
-      req.session.userEmail = newUser.email;
-      res.redirect('/');
+      console.log('User already exists:', email);
+      return res.redirect('/register?error=User already exists');
     }
+    
+    const newUser = new User({
+      name: name.trim(),
+      email: email.trim().toLowerCase(),
+      phone: phone || '',
+      password: password,
+      role: 'customer'
+    });
+    
+    await newUser.save();
+    console.log('New user created:', newUser.email);
+    
+    req.session.userId = newUser._id;
+    req.session.userRole = 'customer';
+    req.session.userName = newUser.name;
+    req.session.userEmail = newUser.email;
+    
+    res.redirect('/');
   } catch (error) {
-    res.redirect('/register?error=1');
+    console.log('Registration error:', error);
+    res.redirect('/register?error=Registration failed');
+  }
+});
+
+app.post('/login', async (req, res) => {
+  const { email, password } = req.body;
+  
+  console.log('Login attempt:', { email });
+  
+  try {
+    const user = await User.findOne({ email: email.trim().toLowerCase() });
+    
+    if (!user) {
+      console.log('User not found:', email);
+      return res.redirect('/login?error=Invalid credentials');
+    }
+    
+    if (user.password !== password) {
+      console.log('Invalid password for:', email);
+      return res.redirect('/login?error=Invalid credentials');
+    }
+    
+    req.session.userId = user._id;
+    req.session.userRole = user.role;
+    req.session.userName = user.name;
+    req.session.userEmail = user.email;
+    
+    console.log('Login successful:', user.email);
+    res.redirect('/');
+  } catch (error) {
+    console.log('Login error:', error);
+    res.redirect('/login?error=Login failed');
   }
 });
 
@@ -466,14 +519,18 @@ app.get('/admin/login', (req, res) => {
   res.render('admin/login');
 });
 
-app.post('/admin/login', async (req, res) => {
+app.post('/admin/login', (req, res) => {
   const { email, password } = req.body;
+  console.log('Admin login attempt:', { email });
+  
   if (email === process.env.ADMIN_EMAIL && password === process.env.ADMIN_PASSWORD) {
     req.session.userId = 'admin';
     req.session.userRole = 'admin';
     req.session.userName = 'Newton Mandal';
+    console.log('Admin login successful');
     res.redirect('/admin/dashboard');
   } else {
+    console.log('Admin login failed');
     res.redirect('/admin/login?error=1');
   }
 });
@@ -544,17 +601,6 @@ app.post('/admin/software/add', isAdmin, upload.single('softwareImage'), async (
     });
     
     await newSoftware.save();
-    res.redirect('/admin/software');
-  } catch (error) {
-    res.redirect('/admin/software?error=1');
-  }
-});
-
-app.post('/admin/software/update/:id', isAdmin, upload.single('softwareImage'), async (req, res) => {
-  try {
-    const updateData = req.body;
-    if (req.file) updateData.imageUrl = '/uploads/software-images/' + req.file.filename;
-    await Software.findByIdAndUpdate(req.params.id, updateData);
     res.redirect('/admin/software');
   } catch (error) {
     res.redirect('/admin/software?error=1');
@@ -641,25 +687,59 @@ app.get('/admin/site-settings', isAdmin, async (req, res) => {
   }
 });
 
+// Background Upload Routes
 app.post('/admin/upload-logo', isAdmin, upload.single('logo'), async (req, res) => {
   try {
     if (!req.file) return res.json({ error: 'No file uploaded' });
     const logoUrl = '/uploads/logo/' + req.file.filename;
-    await SiteSetting.findOneAndUpdate({}, { logo: logoUrl, updatedAt: Date.now() }, { upsert: true });
+    await SiteSetting.findOneAndUpdate({}, { logo: logoUrl }, { upsert: true });
     res.json({ success: true, logoUrl });
   } catch (error) {
     res.json({ error: error.message });
   }
 });
 
-app.post('/admin/upload-watermark', isAdmin, upload.single('watermark'), async (req, res) => {
+app.post('/admin/upload-hero-bg', isAdmin, upload.single('heroBackground'), async (req, res) => {
   try {
-    if (!req.file) return res.json({ error: 'No file uploaded' });
-    const watermarkUrl = '/uploads/watermark/' + req.file.filename;
-    await SiteSetting.findOneAndUpdate({}, { watermark: watermarkUrl, updatedAt: Date.now() }, { upsert: true });
-    res.json({ success: true, watermarkUrl });
+    if (!req.file) return res.redirect('/admin/site-settings?error=1');
+    const bgUrl = '/uploads/hero-bg/' + req.file.filename;
+    await SiteSetting.findOneAndUpdate({}, { heroBackground: bgUrl }, { upsert: true });
+    res.redirect('/admin/site-settings');
   } catch (error) {
-    res.json({ error: error.message });
+    res.redirect('/admin/site-settings?error=1');
+  }
+});
+
+app.post('/admin/upload-stats-bg', isAdmin, upload.single('statsBackground'), async (req, res) => {
+  try {
+    if (!req.file) return res.redirect('/admin/site-settings?error=1');
+    const bgUrl = '/uploads/section-bg/' + req.file.filename;
+    await SiteSetting.findOneAndUpdate({}, { statsBackground: bgUrl }, { upsert: true });
+    res.redirect('/admin/site-settings');
+  } catch (error) {
+    res.redirect('/admin/site-settings?error=1');
+  }
+});
+
+app.post('/admin/upload-featured-bg', isAdmin, upload.single('featuredBackground'), async (req, res) => {
+  try {
+    if (!req.file) return res.redirect('/admin/site-settings?error=1');
+    const bgUrl = '/uploads/section-bg/' + req.file.filename;
+    await SiteSetting.findOneAndUpdate({}, { featuredBackground: bgUrl }, { upsert: true });
+    res.redirect('/admin/site-settings');
+  } catch (error) {
+    res.redirect('/admin/site-settings?error=1');
+  }
+});
+
+app.post('/admin/upload-services-bg', isAdmin, upload.single('servicesBackground'), async (req, res) => {
+  try {
+    if (!req.file) return res.redirect('/admin/site-settings?error=1');
+    const bgUrl = '/uploads/section-bg/' + req.file.filename;
+    await SiteSetting.findOneAndUpdate({}, { servicesBackground: bgUrl }, { upsert: true });
+    res.redirect('/admin/site-settings');
+  } catch (error) {
+    res.redirect('/admin/site-settings?error=1');
   }
 });
 
@@ -717,15 +797,6 @@ app.post('/admin/blog/add', isAdmin, async (req, res) => {
   }
 });
 
-app.post('/admin/blog/delete/:id', isAdmin, async (req, res) => {
-  try {
-    await Blog.findByIdAndDelete(req.params.id);
-    res.redirect('/admin/blogs');
-  } catch (error) {
-    res.redirect('/admin/blogs?error=1');
-  }
-});
-
 app.get('/create-test-admin', async (req, res) => {
   try {
     const adminEmail = process.env.ADMIN_EMAIL || 'newtonmandal@indianweb.com';
@@ -757,142 +828,4 @@ app.listen(PORT, '0.0.0.0', () => {
   console.log(`🔐 Admin Panel: http://localhost:${PORT}/admin/login`);
   console.log(`📧 Admin Email: ${process.env.ADMIN_EMAIL || 'newtonmandal@indianweb.com'}`);
   console.log(`🔑 Admin Password: ${process.env.ADMIN_PASSWORD || 'Newton@2025'}`);
-});
-// Hero Background Upload
-app.post('/admin/upload-hero-bg', isAdmin, upload.single('heroBackground'), async (req, res) => {
-  try {
-    if (!req.file) return res.redirect('/admin/site-settings?error=1');
-    const bgUrl = '/uploads/hero-bg/' + req.file.filename;
-    
-    // hero-bg ফোল্ডার তৈরি করুন
-    const bgPath = 'public/uploads/hero-bg/';
-    if (!fs.existsSync(bgPath)) {
-      fs.mkdirSync(bgPath, { recursive: true });
-    }
-    
-    await SiteSetting.findOneAndUpdate({}, { heroBackground: bgUrl, updatedAt: Date.now() }, { upsert: true });
-    res.redirect('/');
-  } catch (error) {
-    res.redirect('/admin/site-settings?error=1');
-  }
-});
-// Stats Background Upload
-app.post('/admin/upload-stats-bg', isAdmin, upload.single('statsBackground'), async (req, res) => {
-  try {
-    if (!req.file) return res.redirect('/admin/site-settings?error=1');
-    const bgUrl = '/uploads/section-bg/' + req.file.filename;
-    const bgPath = 'public/uploads/section-bg/';
-    if (!fs.existsSync(bgPath)) fs.mkdirSync(bgPath, { recursive: true });
-    await SiteSetting.findOneAndUpdate({}, { statsBackground: bgUrl }, { upsert: true });
-    res.redirect('/admin/site-settings');
-  } catch (error) {
-    res.redirect('/admin/site-settings?error=1');
-  }
-});
-
-// Featured Software Background Upload
-app.post('/admin/upload-featured-bg', isAdmin, upload.single('featuredBackground'), async (req, res) => {
-  try {
-    if (!req.file) return res.redirect('/admin/site-settings?error=1');
-    const bgUrl = '/uploads/section-bg/' + req.file.filename;
-    await SiteSetting.findOneAndUpdate({}, { featuredBackground: bgUrl }, { upsert: true });
-    res.redirect('/admin/site-settings');
-  } catch (error) {
-    res.redirect('/admin/site-settings?error=1');
-  }
-});
-
-// Services Background Upload
-app.post('/admin/upload-services-bg', isAdmin, upload.single('servicesBackground'), async (req, res) => {
-  try {
-    if (!req.file) return res.redirect('/admin/site-settings?error=1');
-    const bgUrl = '/uploads/section-bg/' + req.file.filename;
-    await SiteSetting.findOneAndUpdate({}, { servicesBackground: bgUrl }, { upsert: true });
-    res.redirect('/admin/site-settings');
-  } catch (error) {
-    res.redirect('/admin/site-settings?error=1');
-  }
-});
-// ============= CUSTOMER REGISTRATION =============
-app.post('/register', async (req, res) => {
-  const { name, email, phone, password } = req.body;
-  
-  console.log('Registration attempt:', { name, email, phone });
-  
-  try {
-    // Check if user already exists
-    const existingUser = await User.findOne({ email: email.trim().toLowerCase() });
-    
-    if (existingUser) {
-      console.log('User already exists:', email);
-      return res.redirect('/register?error=User already exists');
-    }
-    
-    // Create new user
-    const newUser = new User({
-      name: name.trim(),
-      email: email.trim().toLowerCase(),
-      phone: phone || '',
-      password: password, // In production, use bcrypt
-      role: 'customer'
-    });
-    
-    await newUser.save();
-    console.log('New user created:', newUser.email);
-    
-    // Create session
-    req.session.userId = newUser._id;
-    req.session.userRole = 'customer';
-    req.session.userName = newUser.name;
-    req.session.userEmail = newUser.email;
-    
-    console.log('Session created for:', newUser.email);
-    res.redirect('/');
-    
-  } catch (error) {
-    console.log('Registration error:', error);
-    res.redirect('/register?error=Registration failed');
-  }
-});
-
-// ============= CUSTOMER LOGIN =============
-app.post('/login', async (req, res) => {
-  const { email, password } = req.body;
-  
-  console.log('Login attempt:', { email });
-  
-  try {
-    // Find user by email
-    const user = await User.findOne({ email: email.trim().toLowerCase() });
-    
-    if (!user) {
-      console.log('User not found:', email);
-      return res.redirect('/login?error=Invalid credentials');
-    }
-    
-    // Check password
-    if (user.password !== password) {
-      console.log('Invalid password for:', email);
-      return res.redirect('/login?error=Invalid credentials');
-    }
-    
-    // Create session
-    req.session.userId = user._id;
-    req.session.userRole = user.role;
-    req.session.userName = user.name;
-    req.session.userEmail = user.email;
-    
-    console.log('Login successful:', user.email);
-    res.redirect('/');
-    
-  } catch (error) {
-    console.log('Login error:', error);
-    res.redirect('/login?error=Login failed');
-  }
-});
-
-// ============= LOGOUT =============
-app.get('/logout', (req, res) => {
-  req.session.destroy();
-  res.redirect('/');
 });
