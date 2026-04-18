@@ -65,7 +65,7 @@ app.use(session({
   cookie: { secure: false, maxAge: 24 * 60 * 60 * 1000 }
 }));
 
-// ============= KEEP ALIVE ENDPOINT (Render sleep prevention) =============
+// ============= KEEP ALIVE ENDPOINT =============
 app.get('/keep-alive', (req, res) => {
   res.status(200).send('OK');
 });
@@ -521,17 +521,21 @@ app.get('/admin/login', (req, res) => {
 
 app.post('/admin/login', (req, res) => {
   const { email, password } = req.body;
-  console.log('Admin login attempt:', { email });
+  console.log('========== ADMIN LOGIN DEBUG ==========');
+  console.log('Email entered:', email);
+  console.log('Password entered:', password);
+  console.log('Expected Email:', process.env.ADMIN_EMAIL);
+  console.log('Expected Password:', process.env.ADMIN_PASSWORD);
   
   if (email === process.env.ADMIN_EMAIL && password === process.env.ADMIN_PASSWORD) {
     req.session.userId = 'admin';
     req.session.userRole = 'admin';
     req.session.userName = 'Newton Mandal';
-    console.log('Admin login successful');
+    console.log('✅ ADMIN LOGIN SUCCESS!');
     res.redirect('/admin/dashboard');
   } else {
-    console.log('Admin login failed');
-    res.redirect('/admin/login?error=1');
+    console.log('❌ ADMIN LOGIN FAILED!');
+    res.redirect('/admin/login?error=Invalid credentials');
   }
 });
 
@@ -809,7 +813,7 @@ app.get('/create-test-admin', async (req, res) => {
         name: 'Newton Mandal',
         email: adminEmail,
         phone: '9876543210',
-        password: process.env.ADMIN_PASSWORD || 'Newton@2025',
+        password: process.env.ADMIN_PASSWORD || 'Newton@1994',
         role: 'admin'
       });
       await admin.save();
@@ -827,5 +831,5 @@ app.listen(PORT, '0.0.0.0', () => {
   console.log(`📱 Customer Panel: http://localhost:${PORT}`);
   console.log(`🔐 Admin Panel: http://localhost:${PORT}/admin/login`);
   console.log(`📧 Admin Email: ${process.env.ADMIN_EMAIL || 'newtonmandal@indianweb.com'}`);
-  console.log(`🔑 Admin Password: ${process.env.ADMIN_PASSWORD || 'Newton@2025'}`);
+  console.log(`🔑 Admin Password: ${process.env.ADMIN_PASSWORD || 'Newton@1994'}`);
 });
