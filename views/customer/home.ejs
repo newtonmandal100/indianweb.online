@@ -108,6 +108,12 @@
             position: relative;
         }
         
+        .section-bg {
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        
         /* Gradient Button */
         .btn-premium {
             background: linear-gradient(90deg, #ff8c00, #ffa500, #ffb347);
@@ -184,7 +190,6 @@
             <circle cx="48" cy="30" r="7" fill="#fff9f0" fill-opacity="0.5"/>
         </svg>
     </div>
-    <!-- আরও ফ্লাওয়ার -->
     <div class="flower"><i class="fas fa-leaf" style="font-size: 30px; color: #2ecc71; opacity: 0.5;"></i></div>
     <div class="flower"><i class="fas fa-leaf" style="font-size: 25px; color: #ff8c00; opacity: 0.4;"></i></div>
     <div class="flower"><i class="fas fa-seedling" style="font-size: 35px; color: #27ae60; opacity: 0.5;"></i></div>
@@ -211,14 +216,12 @@
                             IW
                         </div>
                     <% } %>
-                    <!-- Logo Upload Form (Hidden by default, shows in admin mode) -->
                     <% if(user && user.userRole === 'admin') { %>
                         <form action="/admin/upload-logo" method="POST" enctype="multipart/form-data" class="hidden md:block">
                             <input type="file" name="logo" accept="image/*" class="text-xs bg-gray-100 rounded p-1" onchange="this.form.submit()">
                         </form>
                     <% } %>
                     
-                    <!-- INDIAN WEB Text with Colors -->
                     <div class="text-4xl font-extrabold tracking-wider">
                         <span class="indian-text">INDIAN</span>
                         <span class="web-text">WEB</span>
@@ -249,12 +252,11 @@
         </div>
     </nav>
 
-    <!-- Hero Section with Background Image Upload -->
+    <!-- Hero Section -->
     <section class="hero-bg py-24 rounded-3xl mx-6 mt-6 relative overflow-hidden"
-         style="background-image: url('<%= locals.siteSettings && locals.siteSettings.heroBackground ? locals.siteSettings.heroBackground : 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=1600' %>');">
+         style="background-image: url('<%= (locals.siteSettings && locals.siteSettings.heroBackground) ? locals.siteSettings.heroBackground : 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=1600' %>');">
         <div class="absolute inset-0 bg-black/50"></div>
         <div class="container mx-auto px-6 text-center relative z-10">
-            <!-- Admin Background Upload -->
             <% if(user && user.userRole === 'admin') { %>
                 <div class="absolute top-4 right-4">
                     <form action="/admin/upload-hero-bg" method="POST" enctype="multipart/form-data">
@@ -271,7 +273,7 @@
                 Premium Software Solutions
             </p>
             <p class="text-white text-lg mb-10 max-w-2xl mx-auto opacity-90" data-aos="fade-up" data-aos-delay="200">
-                <%= portfolio?.heroSubtitle || 'Download high-quality software for your business' %>
+                <%= (portfolio && portfolio.heroSubtitle) ? portfolio.heroSubtitle : 'Download high-quality software for your business' %>
             </p>
             <div class="flex flex-col sm:flex-row gap-5 justify-center" data-aos="fade-up" data-aos-delay="300">
                 <a href="/store" class="btn-premium text-white px-8 py-4 rounded-full font-bold text-lg shadow-xl hover:shadow-2xl transition inline-block">
@@ -284,21 +286,22 @@
         </div>
     </section>
 
-    <!-- Stats Section -->
-    <section class="py-16 rounded-3xl mx-6 my-6 bg-white/80 backdrop-blur-sm shadow-xl">
+    <!-- Stats Section with Background -->
+    <section class="py-16 rounded-3xl mx-6 my-6 shadow-xl section-bg"
+        style="background-image: url('<%= (locals.siteSettings && locals.siteSettings.statsBackground) ? locals.siteSettings.statsBackground : '' %>'); background-size: cover; background-position: center;">
         <div class="container mx-auto px-6">
             <div class="grid md:grid-cols-3 gap-8 text-center">
-                <div class="p-6" data-aos="zoom-in">
+                <div class="p-6 bg-white/80 rounded-2xl" data-aos="zoom-in">
                     <div class="text-5xl text-orange-500 mb-2">📦</div>
                     <div class="text-3xl font-bold"><%= stats.totalSoftware %></div>
                     <div class="text-gray-600">Software Products</div>
                 </div>
-                <div class="p-6" data-aos="zoom-in" data-aos-delay="100">
+                <div class="p-6 bg-white/80 rounded-2xl" data-aos="zoom-in" data-aos-delay="100">
                     <div class="text-5xl text-green-500 mb-2">👥</div>
                     <div class="text-3xl font-bold"><%= stats.totalCustomers %></div>
                     <div class="text-gray-600">Happy Customers</div>
                 </div>
-                <div class="p-6" data-aos="zoom-in" data-aos-delay="200">
+                <div class="p-6 bg-white/80 rounded-2xl" data-aos="zoom-in" data-aos-delay="200">
                     <div class="text-5xl text-orange-400 mb-2">📝</div>
                     <div class="text-3xl font-bold"><%= stats.totalOrders %></div>
                     <div class="text-gray-600">Orders Completed</div>
@@ -307,8 +310,9 @@
         </div>
     </section>
 
-    <!-- Featured Software -->
-    <section class="py-20 rounded-3xl mx-6 my-6 bg-white/80 backdrop-blur-sm shadow-xl">
+    <!-- Featured Software Section with Background -->
+    <section class="py-20 rounded-3xl mx-6 my-6 shadow-xl section-bg"
+        style="background-image: url('<%= (locals.siteSettings && locals.siteSettings.featuredBackground) ? locals.siteSettings.featuredBackground : '' %>'); background-size: cover; background-position: center;">
         <div class="container mx-auto px-6">
             <h2 class="text-4xl font-bold text-center mb-12">
                 <span class="premium-text">⭐ Featured Software</span>
@@ -342,7 +346,7 @@
                         </div>
                     <% }); %>
                 <% } else { %>
-                    <div class="col-span-3 text-center py-12">
+                    <div class="col-span-3 text-center py-12 bg-white/80 rounded-2xl">
                         <p class="text-gray-500">No software available yet. <a href="/admin/software" class="text-orange-500">Add some software</a></p>
                     </div>
                 <% } %>
@@ -355,29 +359,30 @@
         </div>
     </section>
 
-    <!-- Services Section -->
-    <section class="py-20 rounded-3xl mx-6 my-6 bg-white/80 backdrop-blur-sm shadow-xl">
+    <!-- Services Section with Background -->
+    <section class="py-20 rounded-3xl mx-6 my-6 shadow-xl section-bg"
+        style="background-image: url('<%= (locals.siteSettings && locals.siteSettings.servicesBackground) ? locals.siteSettings.servicesBackground : '' %>'); background-size: cover; background-position: center;">
         <div class="container mx-auto px-6">
             <h2 class="text-4xl font-bold text-center mb-12">
                 <span class="premium-text">🎯 Our Services</span>
             </h2>
             <div class="grid md:grid-cols-4 gap-6">
-                <div class="text-center p-6" data-aos="fade-up">
+                <div class="text-center p-6 bg-white/80 rounded-2xl" data-aos="fade-up">
                     <div class="text-5xl mb-4">💻</div>
                     <h3 class="text-xl font-bold mb-2">Custom Software</h3>
                     <p class="text-gray-600">Tailored solutions for your business needs</p>
                 </div>
-                <div class="text-center p-6" data-aos="fade-up" data-aos-delay="100">
+                <div class="text-center p-6 bg-white/80 rounded-2xl" data-aos="fade-up" data-aos-delay="100">
                     <div class="text-5xl mb-4">🔧</div>
                     <h3 class="text-xl font-bold mb-2">24/7 Support</h3>
                     <p class="text-gray-600">Round the clock technical assistance</p>
                 </div>
-                <div class="text-center p-6" data-aos="fade-up" data-aos-delay="200">
+                <div class="text-center p-6 bg-white/80 rounded-2xl" data-aos="fade-up" data-aos-delay="200">
                     <div class="text-5xl mb-4">☁️</div>
                     <h3 class="text-xl font-bold mb-2">Cloud Integration</h3>
                     <p class="text-gray-600">Seamless cloud deployment</p>
                 </div>
-                <div class="text-center p-6" data-aos="fade-up" data-aos-delay="300">
+                <div class="text-center p-6 bg-white/80 rounded-2xl" data-aos="fade-up" data-aos-delay="300">
                     <div class="text-5xl mb-4">🔒</div>
                     <h3 class="text-xl font-bold mb-2">Secure Payment</h3>
                     <p class="text-gray-600">100% secure transactions</p>
@@ -415,9 +420,9 @@
                 <div>
                     <h4 class="font-bold mb-4">Contact Info</h4>
                     <ul class="space-y-2 text-gray-300">
-                        <li><i class="fas fa-phone mr-2"></i> <%= portfolio?.contactPhone || '+91 98765 43210' %></li>
-                        <li><i class="fas fa-envelope mr-2"></i> <%= portfolio?.contactEmail || 'support@indianweb.com' %></li>
-                        <li><i class="fas fa-map-marker-alt mr-2"></i> <%= portfolio?.contactAddress || 'New Delhi, India' %></li>
+                        <li><i class="fas fa-phone mr-2"></i> <%= (portfolio && portfolio.contactPhone) ? portfolio.contactPhone : '+91 98765 43210' %></li>
+                        <li><i class="fas fa-envelope mr-2"></i> <%= (portfolio && portfolio.contactEmail) ? portfolio.contactEmail : 'support@indianweb.com' %></li>
+                        <li><i class="fas fa-map-marker-alt mr-2"></i> <%= (portfolio && portfolio.contactAddress) ? portfolio.contactAddress : 'New Delhi, India' %></li>
                     </ul>
                 </div>
                 <div>
