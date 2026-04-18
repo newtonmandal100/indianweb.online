@@ -776,3 +776,40 @@ app.post('/admin/upload-hero-bg', isAdmin, upload.single('heroBackground'), asyn
     res.redirect('/admin/site-settings?error=1');
   }
 });
+// Stats Background Upload
+app.post('/admin/upload-stats-bg', isAdmin, upload.single('statsBackground'), async (req, res) => {
+  try {
+    if (!req.file) return res.redirect('/admin/site-settings?error=1');
+    const bgUrl = '/uploads/section-bg/' + req.file.filename;
+    const bgPath = 'public/uploads/section-bg/';
+    if (!fs.existsSync(bgPath)) fs.mkdirSync(bgPath, { recursive: true });
+    await SiteSetting.findOneAndUpdate({}, { statsBackground: bgUrl }, { upsert: true });
+    res.redirect('/admin/site-settings');
+  } catch (error) {
+    res.redirect('/admin/site-settings?error=1');
+  }
+});
+
+// Featured Software Background Upload
+app.post('/admin/upload-featured-bg', isAdmin, upload.single('featuredBackground'), async (req, res) => {
+  try {
+    if (!req.file) return res.redirect('/admin/site-settings?error=1');
+    const bgUrl = '/uploads/section-bg/' + req.file.filename;
+    await SiteSetting.findOneAndUpdate({}, { featuredBackground: bgUrl }, { upsert: true });
+    res.redirect('/admin/site-settings');
+  } catch (error) {
+    res.redirect('/admin/site-settings?error=1');
+  }
+});
+
+// Services Background Upload
+app.post('/admin/upload-services-bg', isAdmin, upload.single('servicesBackground'), async (req, res) => {
+  try {
+    if (!req.file) return res.redirect('/admin/site-settings?error=1');
+    const bgUrl = '/uploads/section-bg/' + req.file.filename;
+    await SiteSetting.findOneAndUpdate({}, { servicesBackground: bgUrl }, { upsert: true });
+    res.redirect('/admin/site-settings');
+  } catch (error) {
+    res.redirect('/admin/site-settings?error=1');
+  }
+});

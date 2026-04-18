@@ -1,99 +1,214 @@
 <!DOCTYPE html>
-<html><head><title>Site Settings - Logo & Animation</title><script src="https://cdn.tailwindcss.com"></script><script src="https://code.jquery.com/jquery-3.6.0.min.js"></script></head>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Site Settings - INDIAN WEB Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        .preview-img {
+            width: 100px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 2px solid #ddd;
+        }
+        .section-card {
+            transition: all 0.3s ease;
+        }
+        .section-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
 <body class="bg-gray-100">
-<div class="flex"><div class="w-64 bg-purple-900 text-white p-6"><h2>INDIAN WEB</h2><nav><a href="/admin/dashboard" class="block">Dashboard</a><a href="/admin/site-settings" class="block bg-purple-700">Site Settings</a></nav></div>
-<div class="flex-1 p-8">
-<h1 class="text-3xl font-bold mb-6">⚙️ Site Settings (Logo + Animation)</h1>
+    <div class="flex h-screen">
+        <!-- Sidebar -->
+        <div class="w-64 bg-gradient-to-b from-purple-800 to-indigo-900 text-white">
+            <div class="p-6">
+                <h2 class="text-2xl font-bold">INDIAN WEB</h2>
+                <p class="text-sm opacity-75">Admin: Newton Mandal</p>
+            </div>
+            <nav class="mt-8">
+                <a href="/admin/dashboard" class="block py-3 px-6 hover:bg-purple-700">📊 Dashboard</a>
+                <a href="/admin/software" class="block py-3 px-6 hover:bg-purple-700">💾 Software</a>
+                <a href="/admin/custom-orders" class="block py-3 px-6 hover:bg-purple-700">🎨 Custom Orders</a>
+                <a href="/admin/support-queries" class="block py-3 px-6 hover:bg-purple-700">❓ Support</a>
+                <a href="/admin/portfolio" class="block py-3 px-6 hover:bg-purple-700">🎯 Portfolio</a>
+                <a href="/admin/site-settings" class="block py-3 px-6 bg-purple-700">⚙️ Site Settings</a>
+                <a href="/admin/logout" class="block py-3 px-6 hover:bg-red-700 mt-10">🚪 Logout</a>
+            </nav>
+        </div>
 
-<!-- Logo Upload -->
-<div class="bg-white rounded-xl shadow-lg p-6 mb-8">
-    <h2 class="text-xl font-bold mb-4">Logo Management</h2>
-    <div class="flex items-center space-x-6">
-        <img id="logoPreview" src="<%= siteSettings.logo %>" class="h-20 border rounded-lg">
-        <div><input type="file" id="logoInput" accept="image/*"><div id="logoStatus"></div></div>
+        <!-- Main Content -->
+        <div class="flex-1 overflow-y-auto p-8">
+            <h1 class="text-3xl font-bold mb-8">⚙️ Site Settings</h1>
+            
+            <!-- Logo Upload Section -->
+            <div class="bg-white rounded-xl shadow-lg p-6 mb-8 section-card">
+                <h2 class="text-xl font-bold mb-4 flex items-center">
+                    <span class="text-2xl mr-2">🖼️</span> Logo Settings
+                </h2>
+                <div class="flex items-center space-x-6">
+                    <div>
+                        <img id="logoPreview" src="<%= siteSettings.logo %>" class="w-24 h-24 rounded-full object-cover border-4 border-purple-500">
+                        <p class="text-sm text-gray-500 mt-2">Current Logo</p>
+                    </div>
+                    <div>
+                        <form id="logoForm" action="/admin/upload-logo" method="POST" enctype="multipart/form-data">
+                            <input type="file" name="logo" accept="image/*" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100">
+                        </form>
+                        <div id="logoStatus" class="text-sm mt-2 text-green-600"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hero Background Upload -->
+            <div class="bg-white rounded-xl shadow-lg p-6 mb-8 section-card">
+                <h2 class="text-xl font-bold mb-4 flex items-center">
+                    <span class="text-2xl mr-2">🏠</span> Hero Section Background
+                </h2>
+                <div class="flex items-center space-x-6">
+                    <div>
+                        <img id="heroPreview" src="<%= siteSettings.heroBackground || 'https://via.placeholder.com/100x60?text=No+Image' %>" class="preview-img">
+                        <p class="text-sm text-gray-500 mt-2">Current Background</p>
+                    </div>
+                    <div>
+                        <form id="heroForm" action="/admin/upload-hero-bg" method="POST" enctype="multipart/form-data">
+                            <input type="file" name="heroBackground" accept="image/*" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                        </form>
+                        <p class="text-xs text-gray-400 mt-2">Recommended size: 1920x1080px</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Section Background -->
+            <div class="bg-white rounded-xl shadow-lg p-6 mb-8 section-card">
+                <h2 class="text-xl font-bold mb-4 flex items-center">
+                    <span class="text-2xl mr-2">📊</span> Stats Section Background
+                </h2>
+                <div class="flex items-center space-x-6">
+                    <div>
+                        <img id="statsPreview" src="<%= siteSettings.statsBackground || 'https://via.placeholder.com/100x60?text=Default' %>" class="preview-img">
+                        <p class="text-sm text-gray-500 mt-2">Current Background</p>
+                    </div>
+                    <div>
+                        <form id="statsForm" action="/admin/upload-stats-bg" method="POST" enctype="multipart/form-data">
+                            <input type="file" name="statsBackground" accept="image/*" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100">
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Featured Software Section Background -->
+            <div class="bg-white rounded-xl shadow-lg p-6 mb-8 section-card">
+                <h2 class="text-xl font-bold mb-4 flex items-center">
+                    <span class="text-2xl mr-2">⭐</span> Featured Software Section Background
+                </h2>
+                <div class="flex items-center space-x-6">
+                    <div>
+                        <img id="featuredPreview" src="<%= siteSettings.featuredBackground || 'https://via.placeholder.com/100x60?text=Default' %>" class="preview-img">
+                        <p class="text-sm text-gray-500 mt-2">Current Background</p>
+                    </div>
+                    <div>
+                        <form id="featuredForm" action="/admin/upload-featured-bg" method="POST" enctype="multipart/form-data">
+                            <input type="file" name="featuredBackground" accept="image/*" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-yellow-50 file:text-yellow-700 hover:file:bg-yellow-100">
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Services Section Background -->
+            <div class="bg-white rounded-xl shadow-lg p-6 mb-8 section-card">
+                <h2 class="text-xl font-bold mb-4 flex items-center">
+                    <span class="text-2xl mr-2">🎯</span> Services Section Background
+                </h2>
+                <div class="flex items-center space-x-6">
+                    <div>
+                        <img id="servicesPreview" src="<%= siteSettings.servicesBackground || 'https://via.placeholder.com/100x60?text=Default' %>" class="preview-img">
+                        <p class="text-sm text-gray-500 mt-2">Current Background</p>
+                    </div>
+                    <div>
+                        <form id="servicesForm" action="/admin/upload-services-bg" method="POST" enctype="multipart/form-data">
+                            <input type="file" name="servicesBackground" accept="image/*" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-pink-50 file:text-pink-700 hover:file:bg-pink-100">
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Animation Settings -->
+            <div class="bg-white rounded-xl shadow-lg p-6 mb-8 section-card">
+                <h2 class="text-xl font-bold mb-4 flex items-center">
+                    <span class="text-2xl mr-2">✨</span> Animation Settings
+                </h2>
+                <form action="/admin/update-animation" method="POST" class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block font-semibold mb-2">Hero Animation</label>
+                        <select name="heroAnimation" class="w-full p-3 border rounded-lg">
+                            <option value="fade-up" <%= siteSettings.heroAnimation === 'fade-up' ? 'selected' : '' %>>Fade Up</option>
+                            <option value="zoom-in" <%= siteSettings.heroAnimation === 'zoom-in' ? 'selected' : '' %>>Zoom In</option>
+                            <option value="slide-left" <%= siteSettings.heroAnimation === 'slide-left' ? 'selected' : '' %>>Slide Left</option>
+                            <option value="none" <%= siteSettings.heroAnimation === 'none' ? 'selected' : '' %>>None</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block font-semibold mb-2">Card Animation</label>
+                        <select name="cardAnimation" class="w-full p-3 border rounded-lg">
+                            <option value="fade-up" <%= siteSettings.cardAnimation === 'fade-up' ? 'selected' : '' %>>Fade Up</option>
+                            <option value="zoom-in" <%= siteSettings.cardAnimation === 'zoom-in' ? 'selected' : '' %>>Zoom In</option>
+                            <option value="none" <%= siteSettings.cardAnimation === 'none' ? 'selected' : '' %>>None</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block font-semibold mb-2">Animation Speed (ms)</label>
+                        <input type="number" name="animationSpeed" value="<%= siteSettings.animationSpeed %>" class="w-full p-3 border rounded-lg">
+                    </div>
+                    <div>
+                        <label class="block font-semibold mb-2">Background Animation</label>
+                        <select name="backgroundAnimation" class="w-full p-3 border rounded-lg">
+                            <option value="gradient-move" <%= siteSettings.backgroundAnimation === 'gradient-move' ? 'selected' : '' %>>Gradient Move</option>
+                            <option value="particle" <%= siteSettings.backgroundAnimation === 'particle' ? 'selected' : '' %>>Particle Effect</option>
+                            <option value="none" <%= siteSettings.backgroundAnimation === 'none' ? 'selected' : '' %>>None</option>
+                        </select>
+                    </div>
+                    <div class="col-span-2">
+                        <label class="block font-semibold mb-2">Custom CSS Animation</label>
+                        <textarea name="customAnimationCSS" rows="3" class="w-full p-3 border rounded-lg font-mono"><%= siteSettings.customAnimationCSS %></textarea>
+                    </div>
+                    <div class="col-span-2">
+                        <button type="submit" class="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-3 rounded-lg font-bold w-full">
+                            💾 Save Animation Settings
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
-</div>
 
-<!-- Animation Settings -->
-<div class="bg-white rounded-xl shadow-lg p-6">
-    <h2 class="text-xl font-bold mb-4">Animation Settings</h2>
-    <form action="/admin/update-animation" method="POST">
-        <label>Hero Animation:</label><select name="heroAnimation" class="w-full p-2 border rounded mb-3"><option <%= siteSettings.heroAnimation==='fade-up'?'selected':'' %>>fade-up</option><option <%= siteSettings.heroAnimation==='zoom-in'?'selected':'' %>>zoom-in</option><option <%= siteSettings.heroAnimation==='none'?'selected':'' %>>none</option></select>
-        <label>Card Animation:</label><select name="cardAnimation" class="w-full p-2 border rounded mb-3"><option <%= siteSettings.cardAnimation==='fade-up'?'selected':'' %>>fade-up</option><option <%= siteSettings.cardAnimation==='zoom-in'?'selected':'' %>>zoom-in</option></select>
-        <label>Animation Speed (ms):</label><input type="number" name="animationSpeed" value="<%= siteSettings.animationSpeed %>" class="w-full p-2 border rounded mb-3">
-        <label>Background Animation:</label><select name="backgroundAnimation" class="w-full p-2 border rounded mb-3"><option <%= siteSettings.backgroundAnimation==='gradient-move'?'selected':'' %>>gradient-move</option><option <%= siteSettings.backgroundAnimation==='none'?'selected':'' %>>none</option></select>
-        <label>Custom CSS:</label><textarea name="customAnimationCSS" rows="4" class="w-full p-2 border rounded mb-3"><%= siteSettings.customAnimationCSS %></textarea>
-        <button type="submit" class="bg-purple-600 text-white py-2 rounded w-full">Save Animation</button>
-    </form>
-</div>
-
-<script>
-$('#logoInput').on('change', function() {
-    let fd = new FormData(); fd.append('logo', this.files[0]);
-    $.ajax({ url:'/admin/upload-logo', type:'POST', data:fd, processData:false, contentType:false, success:function(r){ if(r.success) $('#logoPreview').attr('src', r.logoUrl+'?t='+Date.now()); } });
-});
-</script>
-</div></div></body></html>
-<!-- Logo Upload Section -->
-<div class="bg-white rounded-xl shadow-lg p-6 mb-8">
-    <h2 class="text-xl font-bold mb-4">🖼️ Logo Management</h2>
-    <div class="flex items-center space-x-8">
-        <div>
-            <img id="logoPreview" src="<%= siteSettings.logo || '/uploads/logo/default-logo.png' %>" alt="Current Logo" class="h-20 w-auto border rounded-lg p-2">
-            <p class="text-sm text-gray-500 mt-2">Current Logo</p>
-        </div>
-        <div>
-            <input type="file" id="logoInput" accept="image/*" class="block w-full text-sm text-gray-500">
-            <div id="logoStatus" class="text-sm mt-2"></div>
-        </div>
-    </div>
-</div>
-
-<!-- Watermark Upload Section -->
-<div class="bg-white rounded-xl shadow-lg p-6 mb-8">
-    <h2 class="text-xl font-bold mb-4">💧 Watermark / Company Picture</h2>
-    <div class="flex items-center space-x-8">
-        <div>
-            <img id="watermarkPreview" src="<%= siteSettings.watermark || '/uploads/watermark/default-watermark.png' %>" alt="Current Watermark" class="h-32 w-auto border rounded-lg p-2">
-            <p class="text-sm text-gray-500 mt-2">Current Watermark</p>
-        </div>
-        <div>
-            <input type="file" id="watermarkInput" accept="image/*" class="block w-full text-sm text-gray-500">
-            <div id="watermarkStatus" class="text-sm mt-2"></div>
-        </div>
-    </div>
-</div>
-
-<script>
-// Logo Upload
-$('#logoInput').on('change', function() {
-    let fd = new FormData();
-    fd.append('logo', this.files[0]);
-    $.ajax({
-        url: '/admin/upload-logo',
-        type: 'POST',
-        data: fd,
-        processData: false,
-        contentType: false,
-        success: function(r) {
-            if(r.success) $('#logoPreview').attr('src', r.logoUrl + '?t=' + Date.now());
-        }
-    });
-});
-
-// Watermark Upload
-$('#watermarkInput').on('change', function() {
-    let fd = new FormData();
-    fd.append('watermark', this.files[0]);
-    $.ajax({
-        url: '/admin/upload-watermark',
-        type: 'POST',
-        data: fd,
-        processData: false,
-        contentType: false,
-        success: function(r) {
-            if(r.success) $('#watermarkPreview').attr('src', r.watermarkUrl + '?t=' + Date.now());
-        }
-    });
-});
-</script>
+    <script>
+        // Auto-submit forms on file select
+        document.getElementById('logoForm').querySelector('input').onchange = function() {
+            this.form.submit();
+        };
+        document.getElementById('heroForm').querySelector('input').onchange = function() {
+            this.form.submit();
+        };
+        document.getElementById('statsForm').querySelector('input').onchange = function() {
+            this.form.submit();
+        };
+        document.getElementById('featuredForm').querySelector('input').onchange = function() {
+            this.form.submit();
+        };
+        document.getElementById('servicesForm').querySelector('input').onchange = function() {
+            this.form.submit();
+        };
+        
+        // Update preview after upload
+        setTimeout(() => {
+            location.reload();
+        }, 2000);
+    </script>
+</body>
+</html>
