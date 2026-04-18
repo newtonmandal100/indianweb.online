@@ -5,58 +5,74 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - INDIAN WEB</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        .btn-orange {
-            background: linear-gradient(90deg, #FF6B35 0%, #FF8C42 100%);
+        * { font-family: 'Poppins', sans-serif; }
+        body {
+            background: linear-gradient(135deg, #0a0a2a 0%, #1a1a3a 100%);
+            min-height: 100vh;
+        }
+        .glow-card {
+            background: rgba(20, 20, 50, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 255, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+        .glow-card:hover {
+            border-color: #00ff00;
+            box-shadow: 0 0 30px rgba(0, 255, 0, 0.2);
+        }
+        .neon-btn {
+            background: linear-gradient(90deg, #00ff00, #0088ff);
+            transition: all 0.3s ease;
+        }
+        .neon-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 20px #00ff00;
         }
     </style>
 </head>
-<body class="bg-gray-100">
-    <div class="min-h-screen flex items-center justify-center">
-        <div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md">
-            <div class="text-center mb-8">
-                <h1 class="text-3xl font-bold">
-                    <span class="text-orange-500">INDIAN</span>
-                    <span class="text-green-500">WEB</span>
-                </h1>
-                <p class="text-gray-500 mt-2">Login to your account</p>
-            </div>
-            
-            <% if (typeof error !== 'undefined' && error) { %>
-            <div class="bg-red-100 text-red-700 p-3 rounded-lg mb-4">Invalid credentials!</div>
+<body class="flex items-center justify-center p-6">
+    <div class="w-full max-w-md">
+        <div class="text-center mb-8">
+            <h1 class="text-5xl font-bold">
+                <span class="text-orange-500">INDIAN</span>
+                <span class="text-green-500">WEB</span>
+            </h1>
+            <p class="text-cyan-400 mt-2">Welcome back!</p>
+        </div>
+        
+        <div class="glow-card rounded-2xl p-8">
+            <% if(req.query.error) { %>
+                <div class="bg-red-500/20 border border-red-500 text-red-400 p-3 rounded-lg mb-4 text-center">
+                    <%= req.query.error %>
+                </div>
             <% } %>
             
             <form action="/login" method="POST">
-                <input type="email" name="email" placeholder="Email Address" required class="w-full p-3 border rounded-lg mb-4">
-                <input type="password" name="password" placeholder="Password" required class="w-full p-3 border rounded-lg mb-6">
-                <button type="submit" class="w-full btn-orange text-white py-3 rounded-lg font-bold">Login</button>
+                <div class="mb-4">
+                    <label class="text-cyan-400 block mb-2">Email</label>
+                    <input type="email" name="email" required 
+                           class="w-full p-3 rounded-lg bg-black/50 border border-green-500/30 text-white focus:border-green-500 outline-none">
+                </div>
+                
+                <div class="mb-6">
+                    <label class="text-cyan-400 block mb-2">Password</label>
+                    <input type="password" name="password" required 
+                           class="w-full p-3 rounded-lg bg-black/50 border border-green-500/30 text-white focus:border-green-500 outline-none">
+                </div>
+                
+                <button type="submit" class="neon-btn w-full py-3 rounded-lg font-bold text-white text-lg">
+                    Login →
+                </button>
             </form>
             
             <div class="text-center mt-6">
-                <p class="text-gray-500">Don't have an account? <a href="/register" class="text-orange-500">Register</a></p>
+                <p class="text-gray-400">Don't have an account? 
+                    <a href="/register" class="text-green-400 hover:text-green-300">Register here</a>
+                </p>
             </div>
         </div>
     </div>
-    <!-- Social Login Buttons -->
-<div class="mt-6">
-  <div class="relative">
-    <div class="absolute inset-0 flex items-center">
-      <div class="w-full border-t border-gray-300"></div>
-    </div>
-    <div class="relative flex justify-center text-sm">
-      <span class="px-2 bg-white text-gray-500">Or continue with</span>
-    </div>
-  </div>
-
-  <div class="mt-6 grid grid-cols-2 gap-3">
-    <a href="/auth/google" class="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-      <img src="https://www.google.com/favicon.ico" class="h-5 w-5 mr-2"> Google
-    </a>
-    <a href="/auth/facebook" class="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-      <img src="https://www.facebook.com/favicon.ico" class="h-5 w-5 mr-2"> Facebook
-    </a>
-  </div>
-</div>
 </body>
 </html>

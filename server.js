@@ -813,3 +813,86 @@ app.post('/admin/upload-services-bg', isAdmin, upload.single('servicesBackground
     res.redirect('/admin/site-settings?error=1');
   }
 });
+// ============= CUSTOMER REGISTRATION =============
+app.post('/register', async (req, res) => {
+  const { name, email, phone, password } = req.body;
+  
+  console.log('Registration attempt:', { name, email, phone });
+  
+  try {
+    // Check if user already exists
+    const existingUser = await User.findOne({ email: email.trim().toLowerCase() });
+    
+    if (existingUser) {
+      console.log('User already exists:', email);
+      return res.redirect('/register?error=User already exists');
+    }
+    
+    // Create new user
+    const newUser = new User({
+      name: name.trim(),
+      email: email.trim().toLowerCase(),
+      phone: phone || '',
+      password: password, // In production, use bcrypt
+      role: 'customer'
+    });
+    
+    await newUser.save();
+    console.log('New user created:', newUser.email);
+    
+    // Create session
+    req.session.userId = newUser._id;
+    req.session.userRole = 'customer';
+    req.session.userName = newUser.name;
+    req.session.userEmail = newUser.email;
+    
+    console.log('Session created for:', newUser.email);
+    res.redirect('/');
+    
+  } catch (error) {
+    console.log('Registration error:', error);
+    res.redirect('/register?error=Registration failed');
+  }
+});
+
+// ============= CUSTOMER LOGIN =============
+app.post('/login', async (req, res) => {
+  const { email, password } = req.body;
+  
+  console.log('Login attempt:', { email });
+  
+  try {
+    // Find user by email
+    const user = await User.findOne({ email: email.trim().toLowerCase() });
+    
+    if (!user) {
+      console.log('User not found:', email);
+      return res.redirect('/login?error=Invalid credentials');
+    }
+    
+    // Check password
+    if (user.password !== password) {
+      console.log('Invalid password for:', email);
+      return res.redirect('/login?error=Invalid credentials');
+    }
+    
+    // Create session
+    req.session.userId = user._id;
+    req.session.userRole = user.role;
+    req.session.userName = user.name;
+    req.session.userEmail = user.email;
+    
+    console.log('Login successful:', user.email);
+    res.redirect('/');
+    
+  } catch (error) {
+    console.log('Login error:', error);
+    res.redirect('/login?error=Login failed');
+  }
+});
+
+// ============= LOGOUT =============
+app.get('/logout', (req, res) => {
+  req.session.destroy();
+  res.redirect('/');
+});
