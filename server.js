@@ -57,13 +57,25 @@ app.use(express.urlencoded({ extended: true }));
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-// Session কনফিগারেশন
-app.use(session({
-  secret: process.env.SESSION_SECRET || 'mysecret',
+// ============= SESSION CONFIGURATION (Fixed for Custom Domain) =============
+const sessionConfig = {
+  secret: process.env.SESSION_SECRET || 'indianweb_super_secret_key_2025',
   resave: false,
   saveUninitialized: false,
-  cookie: { secure: false, maxAge: 24 * 60 * 60 * 1000 }
-}));
+  cookie: {
+    httpOnly: true,
+    maxAge: 24 * 60 * 60 * 1000, // 24 hours
+    sameSite: 'lax',
+    secure: false // Render এ HTTPS থাকলেও false রাখুন
+  }
+};
+
+// কাস্টম ডোমেইনের জন্য domain সেট করুন
+if (process.env.DOMAIN) {
+  sessionConfig.cookie.domain = process.env.DOMAIN;
+}
+
+app.use(session(sessionConfig));
 
 // ============= KEEP ALIVE ENDPOINT =============
 app.get('/keep-alive', (req, res) => {
