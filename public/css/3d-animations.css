@@ -1,0 +1,182 @@
+/* ========================================
+   INDIAN WEB - 3D RGB Premium Animations
+   ======================================== */
+
+/* Gradient Animation for Background */
+@keyframes rgbFlow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+@keyframes float3d {
+    0% { transform: translateY(0px) rotateX(0deg); }
+    50% { transform: translateY(-20px) rotateX(5deg); }
+    100% { transform: translateY(0px) rotateX(0deg); }
+}
+
+@keyframes glowPulse {
+    0% { box-shadow: 0 0 5px rgba(255,107,53,0.5); }
+    50% { box-shadow: 0 0 30px rgba(255,107,53,0.8); }
+    100% { box-shadow: 0 0 5px rgba(255,107,53,0.5); }
+}
+
+@keyframes slideInLeft {
+    from { opacity: 0; transform: translateX(-100px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInRight {
+    from { opacity: 0; transform: translateX(100px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes zoomIn3d {
+    from { opacity: 0; transform: scale(0.8) rotateY(-10deg); }
+    to { opacity: 1; transform: scale(1) rotateY(0deg); }
+}
+
+/* 3D Card Styles */
+.card-3d {
+    background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    border: 1px solid rgba(255,107,53,0.3);
+    transition: all 0.5s ease;
+    transform-style: preserve-3d;
+    perspective: 1000px;
+}
+
+.card-3d:hover {
+    transform: translateY(-15px) rotateX(5deg);
+    box-shadow: 0 30px 50px rgba(0,0,0,0.3);
+    border-color: #ff6b35;
+}
+
+/* RGB Border Animation */
+.rgb-border {
+    position: relative;
+    background: linear-gradient(90deg, #0a0a2a, #1a1a4a);
+    border-radius: 20px;
+}
+
+.rgb-border::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, #ff6b35, #00b894, #ff6b35, #00b894);
+    border-radius: 22px;
+    z-index: -1;
+    animation: rgbFlow 3s ease infinite;
+    background-size: 300% 300%;
+}
+
+/* Glowing Button */
+.btn-premium {
+    background: linear-gradient(135deg, #ff6b35, #ff8c42);
+    border: none;
+    color: white;
+    padding: 12px 30px;
+    border-radius: 50px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    animation: glowPulse 2s infinite;
+}
+
+.btn-premium:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 30px rgba(255,107,53,0.5);
+}
+
+/* 3D Floating Element */
+.float-3d {
+    animation: float3d 3s ease-in-out infinite;
+}
+
+/* Animated Section */
+.section-animate {
+    animation: zoomIn3d 0.8s ease-out;
+}
+
+/* Text Gradient */
+.text-gradient {
+    background: linear-gradient(135deg, #ff6b35, #00b894, #ff6b35);
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: rgbFlow 3s ease infinite;
+}
+
+/* 3D Background Effect */
+.bg-3d {
+    position: relative;
+    overflow: hidden;
+}
+
+.bg-3d::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -50%;
+    width: 200%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,107,53,0.1), transparent);
+    transform: skewX(-25deg);
+    animation: shine 3s infinite;
+}
+
+@keyframes shine {
+    0% { transform: translateX(-100%) skewX(-25deg); }
+    100% { transform: translateX(100%) skewX(-25deg); }
+}
+
+/* Neon Text Effect */
+.neon-text {
+    color: #fff;
+    text-shadow: 0 0 5px #ff6b35, 0 0 10px #ff6b35, 0 0 20px #ff6b35, 0 0 40px #00b894;
+}
+
+/* Glass Morphism */
+.glass-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(12px);
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.2);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+}
+
+/* Hover Animation for Icons */
+.icon-3d {
+    transition: all 0.3s ease;
+}
+
+.icon-3d:hover {
+    transform: rotateY(180deg) scale(1.2);
+    color: #ff6b35;
+}
+
+/* Particle Background */
+#particles-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .card-3d:hover {
+        transform: translateY(-5px);
+    }
+    
+    .btn-premium {
+        padding: 8px 20px;
+        font-size: 14px;
+    }
+}

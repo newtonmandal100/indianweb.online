@@ -7,380 +7,228 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
-        * { font-family: 'Poppins', sans-serif; }
-        
-        :root {
-            --indian-orange: #FF6B35;
-            --web-green: #00C853;
-            --primary-blue: #1E88E5;
-            --light-orange: #FFF5EB;
-            --light-green: #E8F5E9;
-            --white: #FFFFFF;
-        }
-        
-        .hero-gradient {
-            background: linear-gradient(135deg, var(--indian-orange) 0%, var(--web-green) 100%);
-        }
-        
-        .btn-orange {
-            background: linear-gradient(90deg, var(--indian-orange) 0%, #FF8C42 100%);
-            transition: all 0.3s ease;
-        }
-        
-        .btn-orange:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(255, 107, 53, 0.3);
-        }
-        
-        .btn-green {
-            background: linear-gradient(90deg, var(--web-green) 0%, #69F0AE 100%);
-            transition: all 0.3s ease;
-        }
-        
-        .btn-green:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(0, 200, 83, 0.3);
-        }
-        
-        .card-hover {
-            transition: all 0.3s ease;
-            border: 1px solid rgba(0,0,0,0.05);
-        }
-        
-        .card-hover:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            border-color: var(--indian-orange);
-        }
-        
-        .watermark-bg {
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .indian-text {
-            color: var(--indian-orange);
-        }
-        
-        .web-text {
-            color: var(--web-green);
-        }
-        
-        .logo-img {
-            max-height: 60px;
-            object-fit: contain;
-        }
-        
-        .feature-card {
-            background: linear-gradient(135deg, var(--white) 0%, #f8f9fa 100%);
-            border-radius: 20px;
-            padding: 30px;
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-        
-        .feature-card:hover {
-            transform: translateY(-5px);
-            background: linear-gradient(135deg, var(--light-orange) 0%, var(--light-green) 100%);
-        }
-        
-        .feature-icon {
-            width: 70px;
-            height: 70px;
-            margin: 0 auto 20px;
-            background: linear-gradient(135deg, var(--indian-orange) 0%, var(--web-green) 100%);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .feature-icon i {
-            font-size: 30px;
-            color: white;
-        }
-        
-        .nav-link {
-            position: relative;
-            transition: color 0.3s ease;
-        }
-        
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: linear-gradient(90deg, var(--indian-orange), var(--web-green));
-            transition: width 0.3s ease;
-        }
-        
-        .nav-link:hover::after {
-            width: 100%;
-        }
-        
-        .nav-link:hover {
-            color: var(--indian-orange);
-        }
-    </style>
+    <link rel="stylesheet" href="/css/style.css">
 </head>
-<body class="bg-gray-50">
+<body>
 
-    <!-- Navbar -->
-    <nav class="bg-white shadow-lg sticky top-0 z-50">
-        <div class="container mx-auto px-6 py-4">
-            <div class="flex justify-between items-center">
-                <div class="flex items-center space-x-3">
-                    <% if (typeof siteSettings !== 'undefined' && siteSettings && siteSettings.logo && siteSettings.logo !== '/uploads/logo/default-logo.png') { %>
-                        <img src="<%= siteSettings.logo %>" alt="INDIAN WEB Logo" class="logo-img">
-                    <% } else { %>
-                        <div class="text-3xl font-bold">
-                            <span class="indian-text">INDIAN</span>
-                            <span class="web-text">WEB</span>
-                        </div>
-                    <% } %>
+    <!-- Premium Navbar -->
+    <nav class="navbar-premium">
+        <div class="container">
+            <div class="flex justify-between items-center py-4">
+                <div class="logo-text text-2xl font-bold">
+                    <span class="text-gradient">INDIAN</span>
+                    <span class="text-gradient">WEB</span>
                 </div>
                 <div class="hidden md:flex space-x-8">
-                    <a href="/" class="nav-link text-gray-700 font-medium">Home</a>
-                    <a href="/store" class="nav-link text-gray-700 font-medium">Store</a>
-                    <a href="/custom-order" class="nav-link text-gray-700 font-medium">Custom Order</a>
-                    <a href="/support" class="nav-link text-gray-700 font-medium">Support</a>
-                    <a href="/contact" class="nav-link text-gray-700 font-medium">Contact</a>
+                    <a href="/" class="hover:text-[#ff6b35] transition">Home</a>
+                    <a href="/store" class="hover:text-[#ff6b35] transition">Store</a>
+                    <a href="/custom-order" class="hover:text-[#ff6b35] transition">Custom Order</a>
+                    <a href="/blog" class="hover:text-[#ff6b35] transition">Blog</a>
+                    <a href="/support" class="hover:text-[#ff6b35] transition">Support</a>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <a href="/cart" class="relative text-2xl">
-                        🛒
-                        <span id="cartCount" class="absolute -top-2 -right-4 bg-red-500 text-white rounded-full px-1.5 py-0.5 text-xs">0</span>
-                    </a>
-                    <% if (typeof user !== 'undefined' && user && user.userId) { %>
-                        <span class="text-gray-700">👋 <%= user.userName %></span>
-                        <a href="/logout" class="text-red-500 hover:text-red-700">Logout</a>
+                    <button id="darkModeToggle" class="text-2xl">🌙</button>
+                    <a href="/cart" class="relative text-2xl">🛒<span id="cartCount" class="absolute -top-2 -right-4 bg-[#ff6b35] text-white rounded-full px-1 text-xs">0</span></a>
+                    <% if(user && user.userId) { %>
+                        <span>👋 <%= user.userName %></span>
+                        <a href="/logout" class="text-red-400">Logout</a>
                     <% } else { %>
-                        <a href="/login" class="btn-orange text-white px-4 py-2 rounded-lg">Login</a>
+                        <a href="/login" class="btn-premium">Login</a>
                     <% } %>
                 </div>
             </div>
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <section class="hero-gradient text-white py-24 rounded-3xl mx-6 mt-6" data-aos="fade-up" data-aos-duration="1000">
-        <div class="container mx-auto px-6 text-center">
-            <h1 class="text-5xl md:text-7xl font-bold mb-6">
-                <%= (typeof portfolio !== 'undefined' && portfolio && portfolio.heroTitle) ? portfolio.heroTitle : 'Premium Software Solutions' %>
+    <!-- Hero Section with 3D Effect -->
+    <section class="relative overflow-hidden py-32">
+        <div class="container text-center">
+            <h1 class="text-6xl md:text-8xl font-bold mb-6 text-3d neon-text" data-aos="fade-up">
+                Premium <span class="text-gradient">Software</span> Solutions
             </h1>
-            <p class="text-xl md:text-2xl mb-10 opacity-90">
-                <%= (typeof portfolio !== 'undefined' && portfolio && portfolio.heroSubtitle) ? portfolio.heroSubtitle : 'Download high-quality software for your business' %>
+            <p class="text-xl md:text-2xl mb-10 text-white/80" data-aos="fade-up" data-aos-delay="100">
+                Download high-quality software for your business at affordable prices
             </p>
-            <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="/store" class="bg-white text-orange-600 px-8 py-3 rounded-full font-semibold hover:shadow-xl transition transform hover:scale-105 inline-block">
-                    🚀 Explore Store
-                </a>
-                <a href="/custom-order" class="border-2 border-white px-8 py-3 rounded-full font-semibold hover:bg-white hover:text-orange-600 transition inline-block">
-                    📝 Request Custom Software
-                </a>
+            <div class="space-x-4" data-aos="fade-up" data-aos-delay="200">
+                <a href="/store" class="btn-premium inline-block">🚀 Explore Store</a>
+                <a href="/custom-order" class="border-2 border-[#ff6b35] text-white px-8 py-3 rounded-full hover:bg-[#ff6b35] transition inline-block">📝 Custom Order</a>
+            </div>
+        </div>
+        
+        <!-- 3D Floating Elements -->
+        <div class="absolute top-20 left-10 float-3d text-6xl">💻</div>
+        <div class="absolute bottom-20 right-10 float-3d text-6xl" style="animation-delay: 1s;">🚀</div>
+        <div class="absolute top-40 right-20 float-3d text-5xl" style="animation-delay: 0.5s;">⚡</div>
+    </section>
+
+    <!-- Stats Section with Glass Cards -->
+    <section class="py-16">
+        <div class="container">
+            <div class="grid md:grid-cols-4 gap-6">
+                <div class="glass-card p-8 text-center card-3d" data-aos="zoom-in">
+                    <div class="text-5xl mb-4 icon-3d">📦</div>
+                    <div class="text-3xl font-bold"><%= stats.totalSoftware %></div>
+                    <div class="text-white/70">Software Products</div>
+                </div>
+                <div class="glass-card p-8 text-center card-3d" data-aos="zoom-in" data-aos-delay="100">
+                    <div class="text-5xl mb-4 icon-3d">👥</div>
+                    <div class="text-3xl font-bold"><%= stats.totalCustomers %></div>
+                    <div class="text-white/70">Happy Customers</div>
+                </div>
+                <div class="glass-card p-8 text-center card-3d" data-aos="zoom-in" data-aos-delay="200">
+                    <div class="text-5xl mb-4 icon-3d">📝</div>
+                    <div class="text-3xl font-bold"><%= stats.totalOrders %></div>
+                    <div class="text-white/70">Orders Completed</div>
+                </div>
+                <div class="glass-card p-8 text-center card-3d" data-aos="zoom-in" data-aos-delay="300">
+                    <div class="text-5xl mb-4 icon-3d">⭐</div>
+                    <div class="text-3xl font-bold">4.9</div>
+                    <div class="text-white/70">Customer Rating</div>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- Stats Section -->
-    <section class="py-16 rounded-3xl mx-6 my-6 bg-white shadow-xl">
-        <div class="container mx-auto px-6">
-            <div class="grid md:grid-cols-3 gap-8 text-center">
-                <div class="p-6" data-aos="zoom-in">
-                    <div class="feature-icon w-20 h-20 mx-auto mb-4">
-                        <i class="fas fa-box text-3xl"></i>
-                    </div>
-                    <div class="text-3xl font-bold indian-text"><%= (typeof stats !== 'undefined' && stats) ? stats.totalSoftware : 0 %></div>
-                    <div class="text-gray-600">Software Products</div>
-                </div>
-                <div class="p-6" data-aos="zoom-in" data-aos-delay="100">
-                    <div class="feature-icon w-20 h-20 mx-auto mb-4">
-                        <i class="fas fa-users text-3xl"></i>
-                    </div>
-                    <div class="text-3xl font-bold web-text"><%= (typeof stats !== 'undefined' && stats) ? stats.totalCustomers : 0 %></div>
-                    <div class="text-gray-600">Happy Customers</div>
-                </div>
-                <div class="p-6" data-aos="zoom-in" data-aos-delay="200">
-                    <div class="feature-icon w-20 h-20 mx-auto mb-4">
-                        <i class="fas fa-chart-line text-3xl"></i>
-                    </div>
-                    <div class="text-3xl font-bold text-blue-600"><%= (typeof stats !== 'undefined' && stats) ? stats.totalOrders : 0 %></div>
-                    <div class="text-gray-600">Orders Completed</div>
-                </div>
+    <!-- Featured Software Section -->
+    <section class="py-20">
+        <div class="container">
+            <div class="section-header" data-aos="fade-up">
+                <h2 class="text-gradient">⭐ Featured Software</h2>
+                <p>Discover our most popular software products</p>
             </div>
-        </div>
-    </section>
-
-    <!-- Featured Software -->
-    <section class="py-20 rounded-3xl mx-6 my-6 bg-white shadow-xl">
-        <div class="container mx-auto px-6">
-            <h2 class="text-4xl font-bold text-center mb-12">
-                <span class="indian-text">⭐ Featured</span>
-                <span class="web-text"> Software</span>
-            </h2>
-            <div class="grid md:grid-cols-3 gap-8">
-                <% if (typeof featuredSoftware !== 'undefined' && featuredSoftware && featuredSoftware.length > 0) { %>
-                    <% featuredSoftware.forEach(function(software, index) { %>
-                    <div class="bg-white rounded-2xl shadow-lg overflow-hidden card-hover" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="<%= index * 100 %>">
-                        <img src="<%= software.imageUrl || '/images/default-software.jpg' %>" alt="<%= software.name %>" class="w-full h-56 object-cover" onerror="this.src='/images/default-software.jpg'">
-                        <div class="p-6">
-                            <h3 class="text-xl font-bold mb-2"><%= software.name %></h3>
-                            <p class="text-gray-600 mb-4"><%= software.description ? software.description.substring(0, 100) : 'No description' %>...</p>
-                            <div class="flex justify-between items-center">
-                                <div>
-                                    <span class="text-2xl font-bold indian-text">₹<%= software.price %></span>
-                                </div>
-                                <div class="space-x-2">
-                                    <% if (software.demoUrl) { %>
-                                    <a href="<%= software.demoUrl %>" target="_blank" class="text-blue-500 hover:text-blue-700">
-                                        <i class="fas fa-eye"></i> Demo
-                                    </a>
-                                    <% } %>
-                                    <button onclick="addToCart('<%= software._id %>', '<%= software.name.replace(/'/g, "\\'") %>', <%= software.price %>)" class="btn-orange text-white px-4 py-2 rounded-lg transition">
-                                        Buy Now
-                                    </button>
-                                </div>
-                            </div>
+            <div class="grid md:grid-cols-3 lg:grid-cols-4 gap-8">
+                <% featuredSoftware.forEach((software, index) => { %>
+                <div class="card-3d rounded-2xl overflow-hidden" data-aos="flip-left" data-aos-delay="<%= index * 100 %>">
+                    <img src="<%= software.imageUrl %>" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2"><%= software.name %></h3>
+                        <p class="text-white/70 text-sm mb-4"><%= software.description.substring(0, 80) %></p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-2xl font-bold text-[#ff6b35]">₹<%= software.price %></span>
+                            <button onclick="addToCart('<%= software._id %>', '<%= software.name %>', <%= software.price %>)" 
+                                    class="btn-premium text-sm px-4 py-2">Buy Now</button>
                         </div>
                     </div>
-                    <% }); %>
-                <% } else { %>
-                    <div class="col-span-3 text-center py-12">
-                        <p class="text-gray-500">No featured software available.</p>
-                    </div>
-                <% } %>
-            </div>
-            <div class="text-center mt-12">
-                <a href="/store" class="btn-green text-white px-8 py-3 rounded-full font-semibold hover:shadow-xl transition inline-block">
-                    View All Software <i class="fas fa-arrow-right ml-2"></i>
-                </a>
+                </div>
+                <% }); %>
             </div>
         </div>
     </section>
 
-    <!-- Services Section -->
-    <section class="py-20 rounded-3xl mx-6 my-6 bg-white shadow-xl">
-        <div class="container mx-auto px-6">
-            <h2 class="text-4xl font-bold text-center mb-12">
-                <span class="indian-text">🎯 Our</span>
-                <span class="web-text"> Services</span>
-            </h2>
+    <!-- Premium Services Section -->
+    <section class="py-20">
+        <div class="container">
+            <div class="section-header" data-aos="fade-up">
+                <h2 class="text-gradient">🎯 Premium Services</h2>
+                <p>What makes us different</p>
+            </div>
             <div class="grid md:grid-cols-4 gap-6">
-                <div class="feature-card" data-aos="fade-up">
-                    <div class="feature-icon">
-                        <i class="fas fa-laptop-code text-2xl"></i>
-                    </div>
+                <div class="glass-card p-6 text-center card-3d" data-aos="fade-up">
+                    <div class="text-5xl mb-4 icon-3d">💻</div>
                     <h3 class="text-xl font-bold mb-2">Custom Software</h3>
-                    <p class="text-gray-600">Tailored solutions for your business needs</p>
+                    <p class="text-white/70 text-sm">Tailored solutions for your business needs</p>
                 </div>
-                <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
-                    <div class="feature-icon">
-                        <i class="fas fa-headset text-2xl"></i>
-                    </div>
+                <div class="glass-card p-6 text-center card-3d" data-aos="fade-up" data-aos-delay="100">
+                    <div class="text-5xl mb-4 icon-3d">🔧</div>
                     <h3 class="text-xl font-bold mb-2">24/7 Support</h3>
-                    <p class="text-gray-600">Round the clock technical assistance</p>
+                    <p class="text-white/70 text-sm">Round the clock technical assistance</p>
                 </div>
-                <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
-                    <div class="feature-icon">
-                        <i class="fas fa-cloud text-2xl"></i>
-                    </div>
+                <div class="glass-card p-6 text-center card-3d" data-aos="fade-up" data-aos-delay="200">
+                    <div class="text-5xl mb-4 icon-3d">☁️</div>
                     <h3 class="text-xl font-bold mb-2">Cloud Integration</h3>
-                    <p class="text-gray-600">Seamless cloud deployment</p>
+                    <p class="text-white/70 text-sm">Seamless cloud deployment</p>
                 </div>
-                <div class="feature-card" data-aos="fade-up" data-aos-delay="300">
-                    <div class="feature-icon">
-                        <i class="fas fa-shield-alt text-2xl"></i>
-                    </div>
+                <div class="glass-card p-6 text-center card-3d" data-aos="fade-up" data-aos-delay="300">
+                    <div class="text-5xl mb-4 icon-3d">🔒</div>
                     <h3 class="text-xl font-bold mb-2">Secure Payment</h3>
-                    <p class="text-gray-600">100% secure transactions</p>
+                    <p class="text-white/70 text-sm">100% secure transactions</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="bg-gray-900 text-white py-12 mt-12">
-        <div class="container mx-auto px-6">
+    <!-- CTA Section -->
+    <section class="py-20">
+        <div class="container">
+            <div class="rgb-border p-12 rounded-3xl text-center">
+                <h2 class="text-4xl font-bold mb-4">Ready to Get Started?</h2>
+                <p class="text-xl mb-8 text-white/80">Join thousands of satisfied customers using INDIAN WEB</p>
+                <a href="/register" class="btn-premium inline-block text-lg">Create Free Account →</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Premium Footer -->
+    <footer class="footer-premium">
+        <div class="container">
             <div class="grid md:grid-cols-4 gap-8">
                 <div>
-                    <h3 class="text-2xl font-bold mb-4">
-                        <span class="indian-text">INDIAN</span>
-                        <span class="web-text">WEB</span>
-                    </h3>
-                    <p class="text-gray-400">Premium software solutions for modern businesses.</p>
-                    <div class="flex space-x-4 mt-4">
-                        <a href="#" class="text-gray-400 hover:text-orange-500 text-xl"><i class="fab fa-facebook"></i></a>
-                        <a href="#" class="text-gray-400 hover:text-orange-500 text-xl"><i class="fab fa-twitter"></i></a>
-                        <a href="#" class="text-gray-400 hover:text-orange-500 text-xl"><i class="fab fa-instagram"></i></a>
-                        <a href="#" class="text-gray-400 hover:text-orange-500 text-xl"><i class="fab fa-linkedin"></i></a>
-                    </div>
+                    <h3 class="text-2xl font-bold mb-4 text-gradient">INDIAN WEB</h3>
+                    <p class="text-white/70">Premium software solutions for modern businesses.</p>
                 </div>
                 <div>
-                    <h4 class="font-bold mb-4 text-orange-400">Quick Links</h4>
-                    <ul class="space-y-2 text-gray-400">
-                        <li><a href="/store" class="hover:text-green-400">📦 Store</a></li>
-                        <li><a href="/custom-order" class="hover:text-green-400">🎨 Custom Order</a></li>
-                        <li><a href="/support" class="hover:text-green-400">❓ Support</a></li>
-                        <li><a href="/contact" class="hover:text-green-400">📞 Contact</a></li>
+                    <h4 class="font-bold mb-4">Quick Links</h4>
+                    <ul class="space-y-2 text-white/70">
+                        <li><a href="/store" class="hover:text-[#ff6b35]">Store</a></li>
+                        <li><a href="/custom-order" class="hover:text-[#ff6b35]">Custom Order</a></li>
+                        <li><a href="/blog" class="hover:text-[#ff6b35]">Blog</a></li>
                     </ul>
                 </div>
                 <div>
-                    <h4 class="font-bold mb-4 text-green-400">Contact Info</h4>
-                    <ul class="space-y-2 text-gray-400">
-                        <li><i class="fas fa-phone mr-2 text-orange-400"></i> <%= (typeof portfolio !== 'undefined' && portfolio && portfolio.contactPhone) ? portfolio.contactPhone : '+91 98765 43210' %></li>
-                        <li><i class="fas fa-envelope mr-2 text-orange-400"></i> <%= (typeof portfolio !== 'undefined' && portfolio && portfolio.contactEmail) ? portfolio.contactEmail : 'support@indianweb.com' %></li>
-                        <li><i class="fas fa-map-marker-alt mr-2 text-orange-400"></i> <%= (typeof portfolio !== 'undefined' && portfolio && portfolio.contactAddress) ? portfolio.contactAddress : 'New Delhi, India' %></li>
+                    <h4 class="font-bold mb-4">Contact</h4>
+                    <ul class="space-y-2 text-white/70">
+                        <li><i class="fas fa-phone mr-2"></i> +91 98765 43210</li>
+                        <li><i class="fas fa-envelope mr-2"></i> support@indianweb.com</li>
                     </ul>
                 </div>
                 <div>
-                    <h4 class="font-bold mb-4 text-blue-400">Secure Payments</h4>
+                    <h4 class="font-bold mb-4">Secure Payments</h4>
                     <div class="flex space-x-4 text-3xl">
-                        <span>💳</span> <span>📱</span> <span>🏦</span> <span>🪪</span>
+                        <span>💳</span> <span>📱</span> <span>🏦</span>
                     </div>
-                    <p class="text-gray-400 text-sm mt-4">100% Secure Transactions</p>
                 </div>
             </div>
-            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-500">
-                <p>&copy; 2025 <span class="indian-text">INDIAN</span><span class="web-text">WEB</span>. All rights reserved. Designed with ❤️ for India</p>
+            <div class="border-t border-white/10 mt-8 pt-8 text-center text-white/50">
+                <p>&copy; 2025 INDIAN WEB. All rights reserved.</p>
             </div>
         </div>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <script src="/js/3d-effects.js"></script>
+    <script src="/js/main.js"></script>
     <script>
         AOS.init({ duration: 1000, once: true });
-        
-        function updateCartCount() {
-            fetch('/api/cart-count')
-                .then(function(res) { return res.json(); })
-                .then(function(data) {
-                    document.getElementById('cartCount').innerText = data.count || 0;
-                })
-                .catch(function() {});
-        }
         
         function addToCart(id, name, price) {
             fetch('/add-to-cart', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ softwareId: id, name: name, price: price })
-            }).then(function(res) { return res.json(); }).then(function(data) {
+                body: JSON.stringify({ softwareId: id, name, price })
+            }).then(res => res.json()).then(data => {
                 if(data.success) {
-                    updateCartCount();
                     alert('✅ ' + name + ' added to cart!');
+                    location.reload();
                 }
-            }).catch(function() {
-                alert('✅ ' + name + ' added to cart!');
-                updateCartCount();
             });
         }
         
-        updateCartCount();
+        // Dark Mode Toggle
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        if (localStorage.getItem('darkMode') === 'enabled') {
+            document.body.classList.add('dark-mode');
+            darkModeToggle.textContent = '☀️';
+        }
+        darkModeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            if (document.body.classList.contains('dark-mode')) {
+                localStorage.setItem('darkMode', 'enabled');
+                darkModeToggle.textContent = '☀️';
+            } else {
+                localStorage.setItem('darkMode', 'disabled');
+                darkModeToggle.textContent = '🌙';
+            }
+        });
     </script>
 </body>
 </html>

@@ -3,79 +3,483 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= software.name %> - INDIAN WEB</title>
+    <title><%= typeof software !== 'undefined' && software ? software.name : 'Software' %> - INDIAN WEB</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        .btn-gradient { background: linear-gradient(90deg, #f093fb 0%, #f5576c 100%); }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        .btn-gradient { 
+            background: linear-gradient(90deg, #FF6B35 0%, #FF8C42 100%);
+            transition: all 0.3s ease;
+        }
+        .btn-gradient:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255, 107, 53, 0.3);
+        }
+        .indian-text { color: #FF6B35; }
+        .web-text { color: #00C853; }
+        .rating-star {
+            color: #ffc107;
+            font-size: 1.2rem;
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
     </style>
 </head>
 <body class="bg-gray-50">
 
+    <!-- Navbar -->
     <nav class="bg-white shadow-lg sticky top-0 z-50">
-        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <div class="text-2xl font-bold"><span class="text-purple-600">INDIAN</span><span class="text-pink-600">WEB</span></div>
-            <div class="space-x-6">
+        <div class="container mx-auto px-4 md:px-6 py-4">
+            <div class="flex justify-between items-center flex-wrap gap-3">
+                <div class="text-2xl font-bold">
+                    <span class="indian-text">INDIAN</span>
+                    <span class="web-text">WEB</span>
+                </div>
+                <div class="hidden md:flex space-x-6">
+                    <a href="/" class="text-gray-700 hover:text-orange-500 transition">Home</a>
+                    <a href="/store" class="text-orange-500 font-bold transition">Store</a>
+                    <a href="/custom-order" class="text-gray-700 hover:text-orange-500 transition">Custom Order</a>
+                    <a href="/support" class="text-gray-700 hover:text-orange-500 transition">Support</a>
+                    <a href="/contact" class="text-gray-700 hover:text-orange-500 transition">Contact</a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="/cart" class="relative text-2xl">
+                        🛒
+                        <span id="cartCount" class="absolute -top-2 -right-4 bg-red-500 text-white rounded-full px-1.5 py-0.5 text-xs">0</span>
+                    </a>
+                    <% if(typeof user !== 'undefined' && user && user.userId) { %>
+                        <span class="text-gray-700 hidden sm:inline">👋 <%= user.userName %></span>
+                        <a href="/logout" class="text-red-500 hover:text-red-700">Logout</a>
+                    <% } else { %>
+                        <a href="/login" class="btn-gradient text-white px-4 py-2 rounded-lg">Login</a>
+                    <% } %>
+                </div>
+            </div>
+            <!-- Mobile Menu -->
+            <div class="md:hidden flex justify-center gap-4 mt-3 text-sm">
                 <a href="/" class="text-gray-700">Home</a>
-                <a href="/store" class="text-purple-600 font-bold">Store</a>
-                <a href="/cart" class="text-2xl">🛒</a>
+                <a href="/store" class="text-orange-500">Store</a>
+                <a href="/custom-order" class="text-gray-700">Custom</a>
+                <a href="/support" class="text-gray-700">Support</a>
             </div>
         </div>
     </nav>
 
-    <div class="container mx-auto px-6 py-12">
-        <div class="grid md:grid-cols-2 gap-12">
-            <div>
-                <img src="<%= software.imageUrl %>" class="w-full rounded-2xl shadow-lg">
+    <!-- Main Content -->
+    <% if(typeof software !== 'undefined' && software) { %>
+    <div class="container mx-auto px-4 md:px-6 py-8 md:py-12">
+        
+        <!-- Breadcrumb -->
+        <div class="mb-6 text-sm text-gray-500">
+            <a href="/" class="hover:text-orange-500">Home</a> / 
+            <a href="/store" class="hover:text-orange-500">Store</a> / 
+            <span class="text-orange-500"><%= software.name %></span>
+        </div>
+        
+        <!-- Product Section -->
+        <div class="grid md:grid-cols-2 gap-8 md:gap-12">
+            
+            <!-- Left Column - Image -->
+            <div data-aos="fade-right" class="bg-white rounded-2xl shadow-lg p-4">
+                <img src="<%= software.imageUrl && software.imageUrl !== 'undefined' ? software.imageUrl : '/images/default-software.jpg' %>" 
+                     class="w-full rounded-xl object-cover" 
+                     style="height: 400px; object-fit: cover;"
+                     onerror="this.src='/images/default-software.jpg'"
+                     alt="<%= software.name %>">
             </div>
-            <div>
-                <h1 class="text-4xl font-bold mb-4"><%= software.name %></h1>
-                <p class="text-gray-600 text-lg mb-6"><%= software.description %></p>
+            
+            <!-- Right Column - Info -->
+            <div data-aos="fade-left">
+                <h1 class="text-3xl md:text-4xl font-bold mb-4"><%= software.name %></h1>
+                
+                <!-- Rating Summary -->
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="flex rating-star">
+                        ★★★★☆
+                    </div>
+                    <span class="text-gray-500 text-sm">(0 reviews)</span>
+                </div>
+                
+                <p class="text-gray-600 text-base md:text-lg mb-6 leading-relaxed"><%= software.description || 'No description available' %></p>
+                
+                <!-- Price -->
                 <div class="mb-6">
-                    <span class="text-4xl font-bold text-purple-600">₹<%= software.price %></span>
-                    <span class="text-gray-500 line-through ml-3">₹<%= Math.round(software.price * 1.5) %></span>
-                </div>
-                <div class="space-y-3 mb-8">
-                    <p><i class="fas fa-tag text-purple-600"></i> Category: <%= software.category %></p>
-                    <p><i class="fas fa-code-branch text-purple-600"></i> Version: <%= software.version %></p>
-                    <p><i class="fas fa-download text-purple-600"></i> Downloads: <%= software.downloads %></p>
-                </div>
-                <div class="flex space-x-4">
-                    <% if(software.demoUrl) { %>
-                    <a href="<%= software.demoUrl %>" target="_blank" class="border-2 border-purple-600 text-purple-600 px-8 py-3 rounded-full font-semibold hover:bg-purple-600 hover:text-white transition">Live Demo</a>
+                    <span class="text-4xl font-bold text-orange-600">₹<%= typeof software.price === 'number' ? software.price : 0 %></span>
+                    <% if(software.price > 0) { %>
+                    <span class="text-gray-400 line-through ml-3">₹<%= Math.round(software.price * 1.5) %></span>
+                    <span class="ml-2 bg-green-100 text-green-700 text-xs px-2 py-1 rounded">Save 33%</span>
                     <% } %>
-                    <button onclick="addToCart()" class="btn-gradient text-white px-8 py-3 rounded-full font-semibold shadow-lg">Add to Cart 🛒</button>
+                </div>
+                
+                <!-- Details -->
+                <div class="space-y-3 mb-8 p-4 bg-gray-50 rounded-xl">
+                    <p><i class="fas fa-tag text-orange-500 w-6"></i> <strong>Category:</strong> <%= software.category || 'General' %></p>
+                    <p><i class="fas fa-code-branch text-orange-500 w-6"></i> <strong>Version:</strong> <%= software.version || '1.0' %></p>
+                    <p><i class="fas fa-download text-orange-500 w-6"></i> <strong>Downloads:</strong> <%= software.downloads || 0 %>+</p>
+                    <p><i class="fas fa-calendar-alt text-orange-500 w-6"></i> <strong>Released:</strong> <%= software.createdAt ? new Date(software.createdAt).toDateString() : 'Recently' %></p>
+                </div>
+                
+                <!-- Buttons -->
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <% if(software.demoUrl) { %>
+                    <a href="<%= software.demoUrl %>" target="_blank" class="border-2 border-orange-500 text-orange-500 px-8 py-3 rounded-full font-semibold hover:bg-orange-500 hover:text-white transition text-center">
+                        🎬 Live Demo
+                    </a>
+                    <% } %>
+                    <button onclick="addToCart()" class="btn-gradient text-white px-8 py-3 rounded-full font-semibold shadow-lg text-center">
+                        🛒 Add to Cart
+                    </button>
                 </div>
             </div>
         </div>
 
-        <div class="mt-16">
-            <h2 class="text-2xl font-bold mb-4">📋 Description</h2>
-            <p class="text-gray-700"><%= software.longDescription || software.description %></p>
+        <!-- Description Section -->
+        <div class="mt-12 md:mt-16" data-aos="fade-up">
+            <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+                <div class="border-b border-gray-200">
+                    <div class="flex">
+                        <button class="tab-btn active px-6 py-3 text-orange-500 border-b-2 border-orange-500 font-semibold" data-tab="description">📋 Description</button>
+                        <button class="tab-btn px-6 py-3 text-gray-600 hover:text-orange-500 font-semibold" data-tab="features">✨ Features</button>
+                        <button class="tab-btn px-6 py-3 text-gray-600 hover:text-orange-500 font-semibold" data-tab="reviews">⭐ Reviews</button>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <!-- Description Tab -->
+                    <div id="tab-description" class="tab-content active">
+                        <p class="text-gray-700 leading-relaxed"><%= software.longDescription || software.description || 'No detailed description available.' %></p>
+                    </div>
+                    
+                    <!-- Features Tab -->
+                    <div id="tab-features" class="tab-content hidden">
+                        <% if(software.features && software.features.length > 0) { %>
+                        <ul class="grid md:grid-cols-2 gap-3">
+                            <% for(var i = 0; i < software.features.length; i++) { %>
+                            <li class="flex items-center p-2 bg-gray-50 rounded-lg">
+                                <i class="fas fa-check-circle text-green-500 mr-3 text-lg"></i>
+                                <span><%= software.features[i] %></span>
+                            </li>
+                            <% } %>
+                        </ul>
+                        <% } else { %>
+                        <p class="text-gray-500 text-center py-8">No features listed for this software.</p>
+                        <% } %>
+                    </div>
+                    
+                    <!-- Reviews Tab -->
+                    <div id="tab-reviews" class="tab-content hidden">
+                        <!-- Review Form -->
+                        <% if(typeof user !== 'undefined' && user && user.userId) { %>
+                        <div class="mb-8 p-5 bg-gray-50 rounded-xl">
+                            <h4 class="font-bold text-lg mb-4">Write a Review</h4>
+                            <div class="mb-4">
+                                <label class="block mb-2 font-medium">Your Rating</label>
+                                <div class="flex gap-2">
+                                    <span class="rating-star cursor-pointer text-2xl" data-rating="1">☆</span>
+                                    <span class="rating-star cursor-pointer text-2xl" data-rating="2">☆</span>
+                                    <span class="rating-star cursor-pointer text-2xl" data-rating="3">☆</span>
+                                    <span class="rating-star cursor-pointer text-2xl" data-rating="4">☆</span>
+                                    <span class="rating-star cursor-pointer text-2xl" data-rating="5">☆</span>
+                                </div>
+                                <input type="hidden" id="selectedRating" value="5">
+                            </div>
+                            <div class="mb-4">
+                                <textarea id="reviewComment" rows="3" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500" placeholder="Share your experience with this software..."></textarea>
+                            </div>
+                            <button onclick="submitReview()" class="bg-orange-500 text-white px-6 py-2 rounded-lg hover:bg-orange-600 transition">
+                                Submit Review ✍️
+                            </button>
+                        </div>
+                        <% } else { %>
+                        <div class="mb-8 p-4 bg-gray-100 rounded-lg text-center">
+                            <p class="text-gray-600">
+                                <a href="/login" class="text-orange-500 hover:underline">Login</a> to write a review
+                            </p>
+                        </div>
+                        <% } %>
+                        
+                        <!-- Reviews List -->
+                        <div id="reviewsList">
+                            <div class="text-center py-8 text-gray-500">
+                                <i class="fas fa-spinner fa-spin text-2xl"></i>
+                                <p class="mt-2">Loading reviews...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-
-        <% if(software.features && software.features.length) { %>
-        <div class="mt-8">
-            <h2 class="text-2xl font-bold mb-4">✨ Key Features</h2>
-            <ul class="grid md:grid-cols-2 gap-3">
-                <% software.features.forEach(feature => { %>
-                <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i> <%= feature %></li>
-                <% }); %>
-            </ul>
-        </div>
-        <% } %>
     </div>
+    
+    <% } else { %>
+    <!-- Software Not Found -->
+    <div class="container mx-auto px-4 py-20 text-center">
+        <div class="text-8xl mb-6">🔍</div>
+        <h2 class="text-3xl font-bold text-gray-700 mb-3">Software Not Found</h2>
+        <p class="text-gray-500 mb-8">The software you're looking for doesn't exist or has been removed.</p>
+        <a href="/store" class="btn-gradient text-white px-8 py-3 rounded-full inline-block">Browse Store →</a>
+    </div>
+    <% } %>
 
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-10 md:py-12 mt-12">
+        <div class="container mx-auto px-4 md:px-6">
+            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-2xl font-bold mb-4">
+                        <span class="text-orange-500">INDIAN</span>
+                        <span class="text-green-500">WEB</span>
+                    </h3>
+                    <p class="text-gray-400 text-sm">Premium software solutions for modern businesses.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Quick Links</h4>
+                    <ul class="space-y-2 text-gray-400 text-sm">
+                        <li><a href="/store" class="hover:text-orange-500">Store</a></li>
+                        <li><a href="/custom-order" class="hover:text-orange-500">Custom Order</a></li>
+                        <li><a href="/support" class="hover:text-orange-500">Support</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Contact</h4>
+                    <ul class="space-y-2 text-gray-400 text-sm">
+                        <li><i class="fas fa-phone w-5"></i> +91 98765 43210</li>
+                        <li><i class="fas fa-envelope w-5"></i> support@indianweb.com</li>
+                        <li><i class="fas fa-map-marker-alt w-5"></i> New Delhi, India</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Secure Payments</h4>
+                    <div class="flex space-x-4 text-3xl">
+                        <span>💳</span> <span>📱</span> <span>🏦</span>
+                    </div>
+                    <p class="text-gray-400 text-xs mt-3">100% Secure Transactions</p>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 mt-8 pt-6 text-center text-gray-500 text-sm">
+                <p>&copy; 2025 INDIAN WEB. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
     <script>
+        // Initialize AOS
+        AOS.init({ duration: 1000, once: true });
+        
+        // Software ID
+        const softwareId = '<%= typeof software !== "undefined" && software ? software._id : "" %>';
+        
+        // Tab functionality
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const tabId = this.getAttribute('data-tab');
+                
+                // Update active tab button
+                document.querySelectorAll('.tab-btn').forEach(b => {
+                    b.classList.remove('active', 'text-orange-500', 'border-b-2', 'border-orange-500');
+                    b.classList.add('text-gray-600');
+                });
+                this.classList.add('active', 'text-orange-500', 'border-b-2', 'border-orange-500');
+                this.classList.remove('text-gray-600');
+                
+                // Update active content
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.add('hidden');
+                });
+                document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+                
+                // Load reviews if reviews tab is opened
+                if(tabId === 'reviews' && softwareId) {
+                    loadReviews();
+                }
+            });
+        });
+        
+        // Star rating functionality
+        const stars = document.querySelectorAll('.rating-star');
+        stars.forEach(star => {
+            star.addEventListener('click', function() {
+                const rating = parseInt(this.getAttribute('data-rating'));
+                document.getElementById('selectedRating').value = rating;
+                
+                stars.forEach((s, index) => {
+                    if(index < rating) {
+                        s.innerHTML = '★';
+                        s.style.color = '#ffc107';
+                    } else {
+                        s.innerHTML = '☆';
+                        s.style.color = '#ddd';
+                    }
+                });
+            });
+        });
+        
+        // Set default 5 stars
+        if(stars.length > 0) {
+            for(let i = 0; i < 5; i++) {
+                stars[i].innerHTML = '★';
+                stars[i].style.color = '#ffc107';
+            }
+        }
+        
+        // Add to cart function
         function addToCart() {
             fetch('/add-to-cart', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ softwareId: '<%= software._id %>', name: '<%= software.name %>', price: <%= software.price %> })
-            }).then(res => res.json()).then(data => {
-                if(data.success) alert('✅ Added to cart!');
+                body: JSON.stringify({
+                    softwareId: softwareId, 
+                    name: '<%= typeof software !== "undefined" && software ? software.name.replace(/'/g, "\\'") : "" %>', 
+                    prie: '<%= typeof software !== "undefined" && software ? (typeof software.price === 'number' ? software.price : 0) : 0 %>'
+                })
+            }
+            .then(res => res.json())
+            .then(data => {
+                if(data.success) {
+                    showToast('✅ Added to cart!', 'success');
+                    updateCartCount();
+                }
+            })
+            .catch(() => {
+                showToast('✅ Added to cart!', 'success');
+                updateCartCount();
             });
         }
+        
+        // Show toast notification
+        function showToast(message, type) {
+            const toast = document.createElement('div');
+            toast.className = `fixed bottom-4 right-4 px-6 py-3 rounded-lg text-white z-50 transition-all duration-300 ${type === 'success' ? 'bg-green-500' : 'bg-red-500'}`;
+            toast.innerHTML = message;
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+        
+        // Update cart count
+        function updateCartCount() {
+            fetch('/api/cart-count')
+                .then(res => res.json())
+                .then(data => {
+                    const cartSpan = document.getElementById('cartCount');
+                    if(cartSpan) cartSpan.innerText = data.count || 0;
+                })
+                .catch(() => {});
+        }
+        
+        // Submit review
+        function submitReview() {
+            const rating = document.getElementById('selectedRating') ? parseInt(document.getElementById('selectedRating').value) : 5;
+            const comment = document.getElementById('reviewComment') ? document.getElementById('reviewComment').value : '';
+            
+            if(!comment.trim()) {
+                showToast('Please write a comment!', 'error');
+                return;
+            }
+            
+            fetch(`/review/${softwareId}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ rating, comment })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if(data.success) {
+                    showToast('✅ Review submitted successfully!', 'success');
+                    if(document.getElementById('reviewComment')) {
+                        document.getElementById('reviewComment').value = '';
+                    }
+                    loadReviews();
+                } else {
+                    showToast('❌ Failed to submit review. Please try again.', 'error');
+                }
+            })
+            .catch(() => {
+                showToast('❌ Failed to submit review. Please try again.', 'error');
+            });
+        }
+        
+        // Load reviews
+        function loadReviews() {
+            const reviewsDiv = document.getElementById('reviewsList');
+            if(!reviewsDiv) return;
+            
+            reviewsDiv.innerHTML = `
+                <div class="text-center py-8 text-gray-500">
+                    <i class="fas fa-spinner fa-spin text-2xl"></i>
+                    <p class="mt-2">Loading reviews...</p>
+                </div>
+            `;
+            
+            fetch(`/api/reviews/${softwareId}`)
+                .then(res => res.json())
+                .then(reviews => {
+                    if(!reviews || reviews.length === 0) {
+                        reviewsDiv.innerHTML = `
+                            <div class="text-center py-8 text-gray-500 bg-gray-50 rounded-xl">
+                                <i class="fas fa-comment-dots text-5xl mb-3 opacity-50"></i>
+                                <p>No reviews yet. Be the first to review!</p>
+                            </div>
+                        `;
+                        return;
+                    }
+                    
+                    reviewsDiv.innerHTML = reviews.map(review => `
+                        <div class="bg-white border rounded-xl p-5 mb-4 shadow-sm">
+                            <div class="flex items-center justify-between flex-wrap gap-2 mb-3">
+                                <div class="flex items-center">
+                                    <div class="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center mr-3">
+                                        <i class="fas fa-user text-orange-500"></i>
+                                    </div>
+                                    <div>
+                                        <span class="font-bold block">${escapeHtml(review.userName || 'Anonymous')}</span>
+                                        <div class="text-yellow-500 text-sm">
+                                            ${'★'.repeat(review.rating || 5)}${'☆'.repeat(5 - (review.rating || 5))}
+                                        </div>
+                                    </div>
+                                </div>
+                                <small class="text-gray-400 text-xs">${review.createdAt ? new Date(review.createdAt).toDateString() : 'Recently'}</small>
+                            </div>
+                            <p class="text-gray-600 text-sm md:text-base">${escapeHtml(review.comment || 'No comment')}</p>
+                        </div>
+                    `).join('');
+                })
+                .catch(error => {
+                    console.error('Error loading reviews:', error);
+                    reviewsDiv.innerHTML = `
+                        <div class="text-center py-8 text-gray-500 bg-red-50 rounded-xl">
+                            <i class="fas fa-exclamation-triangle text-2xl text-red-500 mb-2"></i>
+                            <p>Unable to load reviews. Please try again later.</p>
+                        </div>
+                    `;
+                });
+        }
+        
+        // Escape HTML helper
+        function escapeHtml(text) {
+            if(!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCartCount();
+        });
     </script>
 </body>
 </html>

@@ -48,8 +48,17 @@
                     <a href="/support" class="text-gray-700 hover:text-orange-500">Support</a>
                     <a href="/contact" class="text-gray-700 hover:text-orange-500">Contact</a>
                 </div>
-                <div>
-                    <a href="/cart" class="relative text-2xl">🛒<span id="cartCount" class="absolute -top-2 -right-4 bg-red-500 text-white rounded-full px-1 text-xs">0</span></a>
+                <div class="flex items-center space-x-4">
+                    <a href="/cart" class="relative text-2xl">
+                        🛒
+                        <span id="cartCount" class="absolute -top-2 -right-4 bg-red-500 text-white rounded-full px-1 text-xs">0</span>
+                    </a>
+                    <% if(user && user.userId) { %>
+                        <span class="text-gray-700">👋 <%= user.userName %></span>
+                        <a href="/logout" class="text-red-500 hover:text-red-700">Logout</a>
+                    <% } else { %>
+                        <a href="/login" class="btn-orange text-white px-4 py-2 rounded-lg">Login</a>
+                    <% } %>
                 </div>
             </div>
         </div>
@@ -63,31 +72,44 @@
         </div>
     </section>
 
+    <!-- Search and Filter Section -->
+    <section class="py-8">
+        <div class="container mx-auto px-6">
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <div class="grid md:grid-cols-4 gap-4">
+                    <input type="text" id="searchInput" placeholder="🔍 Search software..." class="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500">
+                    <select id="categoryFilter" class="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500">
+                        <option value="">All Categories</option>
+                        <option value="Business">💼 Business</option>
+                        <option value="Education">📚 Education</option>
+                        <option value="Development">💻 Development</option>
+                        <option value="Design">🎨 Design</option>
+                        <option value="Security">🔒 Security</option>
+                        <option value="Utility">🛠️ Utility</option>
+                    </select>
+                    <select id="priceFilter" class="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500">
+                        <option value="">💰 All Prices</option>
+                        <option value="0-500">Under ₹500</option>
+                        <option value="500-1000">₹500 - ₹1000</option>
+                        <option value="1000-5000">₹1000 - ₹5000</option>
+                        <option value="5000+">Above ₹5000</option>
+                    </select>
+                    <select id="sortFilter" class="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500">
+                        <option value="name">📝 Sort by Name</option>
+                        <option value="price_asc">💰 Price: Low to High</option>
+                        <option value="price_desc">💰 Price: High to Low</option>
+                        <option value="newest">🆕 Newest First</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Software Grid -->
-    <section class="py-16">
+    <section class="py-8">
         <div class="container mx-auto px-6">
             <% if (typeof software !== 'undefined' && software && software.length > 0) { %>
-            <div class="grid md:grid-cols-3 lg:grid-cols-4 gap-8">
-                <% software.forEach(function(item, index) { %>
-                <div class="bg-white rounded-2xl shadow-lg overflow-hidden card-hover" data-aos="fade-up" data-aos-delay="<%= index * 50 %>">
-                    <img src="<%= item.imageUrl || '/images/default-software.jpg' %>" class="w-full h-48 object-cover" onerror="this.src='/images/default-software.jpg'">
-                    <div class="p-5">
-                        <h3 class="text-xl font-bold mb-2"><%= item.name %></h3>
-                        <p class="text-gray-600 text-sm mb-3"><%= item.description ? item.description.substring(0, 80) : 'No description' %>...</p>
-                        <div class="flex items-center justify-between mb-3">
-                            <span class="text-2xl font-bold text-orange-600">₹<%= item.price %></span>
-                            <span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">v<%= item.version || '1.0' %></span>
-                        </div>
-                        <div class="flex space-x-2">
-                            <% if(item.demoUrl) { %>
-                            <a href="<%= item.demoUrl %>" target="_blank" class="flex-1 text-center border border-blue-500 text-blue-500 py-2 rounded-lg hover:bg-blue-500 hover:text-white transition">Demo</a>
-                            <% } %>
-                            <button onclick="addToCart('<%= item._id %>', '<%= item.name.replace(/'/g, "\\'") %>', <%= item.price %>)" class="flex-1 btn-orange text-white py-2 rounded-lg">Buy</button>
-                        </div>
-                    </div>
-                </div>
-                <% }); %>
-            </div>
+            <div id="softwareGrid" class="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"></div>
             <% } else { %>
             <div class="text-center py-20">
                 <div class="text-6xl mb-4">📦</div>
@@ -100,16 +122,148 @@
     </section>
 
     <!-- Footer -->
-    <footer class="bg-gray-900 text-white py-10 mt-12">
-        <div class="container mx-auto px-6 text-center">
-            <p>&copy; 2025 <span class="text-orange-500">INDIAN</span><span class="text-green-500">WEB</span>. All rights reserved.</p>
+    <footer class="bg-gray-900 text-white py-12 mt-12">
+        <div class="container mx-auto px-6">
+            <div class="grid md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-2xl font-bold mb-4">
+                        <span class="text-orange-500">INDIAN</span>
+                        <span class="text-green-500">WEB</span>
+                    </h3>
+                    <p class="text-gray-400">Premium software solutions for modern businesses.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Quick Links</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="/store" class="hover:text-orange-500">Store</a></li>
+                        <li><a href="/custom-order" class="hover:text-orange-500">Custom Order</a></li>
+                        <li><a href="/support" class="hover:text-orange-500">Support</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Contact</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><i class="fas fa-phone mr-2"></i> +91 98765 43210</li>
+                        <li><i class="fas fa-envelope mr-2"></i> support@indianweb.com</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Follow Us</h4>
+                    <div class="flex space-x-4 text-2xl">
+                        <a href="#" class="text-gray-400 hover:text-orange-500"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-orange-500"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-orange-500"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-500">
+                <p>&copy; 2025 <span class="text-orange-500">INDIAN</span><span class="text-green-500">WEB</span>. All rights reserved.</p>
+            </div>
         </div>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <script type="application/json" id="software-data"><%= JSON.stringify(software) %></script>
     <script>
         AOS.init({ duration: 1000, once: true });
         
+        // All software data from server
+        let allSoftware = <%= JSON.stringify(software) %>;
+        
+        // Function to render software cards
+        function renderSoftware(softwareArray) {
+            const grid = document.getElementById('softwareGrid');
+            if (!grid) return;
+            
+            if (!softwareArray || softwareArray.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full text-center py-20">
+                        <div class="text-6xl mb-4">🔍</div>
+                        <h3 class="text-xl font-bold text-gray-600">No software found</h3>
+                        <p class="text-gray-500 mt-2">Try adjusting your search or filter</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            grid.innerHTML = softwareArray.map(function(item) {
+                const imageUrl = item.imageUrl || '/images/default-software.jpg';
+                const description = item.description ? item.description.substring(0, 80) : 'No description available';
+                const version = item.version || '1.0';
+                const demoUrl = item.demoUrl;
+                const itemId = item._id;
+                const itemName = item.name.replace(/'/g, "\\'");
+                const itemPrice = item.price;
+                
+                return `
+                    <div class="bg-white rounded-2xl shadow-lg overflow-hidden card-hover" data-aos="fade-up">
+                        <img src="${imageUrl}" class="w-full h-48 object-cover" onerror="this.src='/images/default-software.jpg'" alt="${item.name}">
+                        <div class="p-5">
+                            <h3 class="text-xl font-bold mb-2">${item.name}</h3>
+                            <p class="text-gray-600 text-sm mb-3">${description}...</p>
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-2xl font-bold text-orange-600">₹${itemPrice}</span>
+                                <span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">v${version}</span>
+                            </div>
+                            <div class="flex space-x-2">
+                                ${demoUrl ? `<a href="${demoUrl}" target="_blank" class="flex-1 text-center border border-blue-500 text-blue-500 py-2 rounded-lg hover:bg-blue-500 hover:text-white transition">Demo</a>` : ''}
+                                <button onclick="addToCart('${itemId}', '${itemName}', ${itemPrice})" class="flex-1 btn-orange text-white py-2 rounded-lg">Buy Now</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        // Filter and sort function
+        function filterAndRender() {
+            let filtered = [...allSoftware];
+            const search = document.getElementById('searchInput')?.value.toLowerCase() || '';
+            const category = document.getElementById('categoryFilter')?.value || '';
+            const price = document.getElementById('priceFilter')?.value || '';
+            const sort = document.getElementById('sortFilter')?.value || 'name';
+            
+            // Filter by search
+            if (search) {
+                filtered = filtered.filter(function(s) {
+                    return s.name.toLowerCase().includes(search) || 
+                           (s.description && s.description.toLowerCase().includes(search));
+                });
+            }
+            
+            // Filter by category
+            if (category) {
+                filtered = filtered.filter(function(s) { return s.category === category; });
+            }
+            
+            // Filter by price
+            if (price) {
+                if (price === '0-500') {
+                    filtered = filtered.filter(function(s) { return s.price >= 0 && s.price <= 500; });
+                } else if (price === '500-1000') {
+                    filtered = filtered.filter(function(s) { return s.price >= 500 && s.price <= 1000; });
+                } else if (price === '1000-5000') {
+                    filtered = filtered.filter(function(s) { return s.price >= 1000 && s.price <= 5000; });
+                } else if (price === '5000+') {
+                    filtered = filtered.filter(function(s) { return s.price >= 5000; });
+                }
+            }
+            
+            // Sort
+            if (sort === 'price_asc') {
+                filtered.sort(function(a, b) { return a.price - b.price; });
+            } else if (sort === 'price_desc') {
+                filtered.sort(function(a, b) { return b.price - a.price; });
+            } else if (sort === 'name') {
+                filtered.sort(function(a, b) { return a.name.localeCompare(b.name); });
+            } else if (sort === 'newest') {
+                filtered.sort(function(a, b) { return new Date(b.createdAt) - new Date(a.createdAt); });
+            }
+            
+            renderSoftware(filtered);
+        }
+        
+        // Add to cart function
         function addToCart(id, name, price) {
             fetch('/add-to-cart', {
                 method: 'POST',
@@ -126,12 +280,35 @@
             });
         }
         
+        // Update cart count function
         function updateCartCount() {
             fetch('/api/cart-count').then(function(res) { return res.json(); }).then(function(data) {
-                document.getElementById('cartCount').innerText = data.count || 0;
+                const cartSpan = document.getElementById('cartCount');
+                if (cartSpan) cartSpan.innerText = data.count || 0;
             }).catch(function() {});
         }
-        updateCartCount();
+        
+        // Event listeners for filter controls
+        function initFilters() {
+            const searchInput = document.getElementById('searchInput');
+            const categoryFilter = document.getElementById('categoryFilter');
+            const priceFilter = document.getElementById('priceFilter');
+            const sortFilter = document.getElementById('sortFilter');
+            
+            if (searchInput) searchInput.addEventListener('input', filterAndRender);
+            if (categoryFilter) categoryFilter.addEventListener('change', filterAndRender);
+            if (priceFilter) priceFilter.addEventListener('change', filterAndRender);
+            if (sortFilter) sortFilter.addEventListener('change', filterAndRender);
+            
+            // Initial render
+            filterAndRender();
+        }
+        
+        // Initialize everything when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCartCount();
+            initFilters();
+        });
     </script>
 </body>
 </html>

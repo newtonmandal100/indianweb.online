@@ -87,5 +87,58 @@
             </div>
         </div>
     </div>
+    <!-- Image Slider Section in Admin Dashboard -->
+<div class="bg-white rounded-xl shadow-lg p-6 mb-8">
+    <h2 class="text-xl font-bold mb-4">Premium Software Background Slider</h2>
+    <div class="relative overflow-hidden rounded-lg h-64 md:h-96">
+        <div id="slider" class="flex transition-transform duration-500 ease-out h-full">
+            <div class="min-w-full h-full bg-cover bg-center" style="background-image: url('/images/slides/slide1.jpg');">
+                <div class="flex items-center justify-center h-full bg-black/50">
+                    <h3 class="text-white text-2xl font-bold">Premium Software Solutions</h3>
+                </div>
+            </div>
+            <div class="min-w-full h-full bg-cover bg-center" style="background-image: url('/images/slides/slide2.jpg');">
+                <div class="flex items-center justify-center h-full bg-black/50">
+                    <h3 class="text-white text-2xl font-bold">24/7 Customer Support</h3>
+                </div>
+            </div>
+            <div class="min-w-full h-full bg-cover bg-center" style="background-image: url('/images/slides/slide3.jpg');">
+                <div class="flex items-center justify-center h-full bg-black/50">
+                    <h3 class="text-white text-2xl font-bold">Secure Payment Gateway</h3>
+                </div>
+            </div>
+        </div>
+        <button id="prevSlide" class="absolute left-4 top-1/2 -translate-y-1/2 bg-black/50 text-white p-2 rounded-full hover:bg-black/70">◀</button>
+        <button id="nextSlide" class="absolute right-4 top-1/2 -translate-y-1/2 bg-black/50 text-white p-2 rounded-full hover:bg-black/70">▶</button>
+    </div>
+</div>
+
+<script>
+    // Slider functionality
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('#slider > div');
+    const totalSlides = slides.length;
+    
+    function updateSlider() {
+        const slider = document.getElementById('slider');
+        slider.style.transform = `translateX(-${currentSlide * 100}%)`;
+    }
+    
+    document.getElementById('nextSlide').addEventListener('click', () => {
+        currentSlide = (currentSlide + 1) % totalSlides;
+        updateSlider();
+    });
+    
+    document.getElementById('prevSlide').addEventListener('click', () => {
+        currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+        updateSlider();
+    });
+    
+    // Auto slide every 5 seconds
+    setInterval(() => {
+        currentSlide = (currentSlide + 1) % totalSlides;
+        updateSlider();
+    }, 5000);
+</script>
 </body>
 </html>

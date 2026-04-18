@@ -667,3 +667,183 @@ app.listen(PORT, '0.0.0.0', () => {
   console.log(`🔑 Admin Password: ${process.env.ADMIN_PASSWORD || 'Newton@2025'}`);
   console.log(`✅ Server is ready to accept connections`);
 });
+// Passport.js কনফিগারেশন
+const passport = require('passport');
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const FacebookStrategy = require('passport-facebook').Strategy;
+
+// Passport সেটআপ
+app.use(passport.initialize());
+app.use(passport.session());
+
+passport.serializeUser((user, done) => done(null, user.id));
+passport.deserializeUser(async (id, done) => {
+  const user = await User.findById(id);
+  done(null, user);
+});
+
+// Google Strategy
+passport.use(new GoogleStrategy({
+  clientID: process.env.GOOGLE_CLIENT_ID,
+  clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+  callbackURL: `${process.env.SITE_URL}/auth/google/callback`
+}, async (accessToken, refreshToken, profile, done) => {
+  let user = await User.findOne({ email: profile.emails[0].value });
+  if (!user) {
+    user = new User({
+      name: profile.displayName,
+      email: profile.emails[0].value,
+      role: 'customer',
+      isSocialLogin: true
+    });
+    await user.save();
+  }
+  return done(null, user);
+}));
+
+// Facebook Strategy
+passport.use(new FacebookStrategy({
+  clientID: process.env.FACEBOOK_APP_ID,
+  clientSecret: process.env.FACEBOOK_APP_SECRET,
+  callbackURL: `${process.env.SITE_URL}/auth/facebook/callback`,
+  profileFields: ['id', 'displayName', 'emails']
+}, async (accessToken, refreshToken, profile, done) => {
+  let user = await User.findOne({ email: profile.emails[0].value });
+  if (!user) {
+    user = new User({
+      name: profile.displayName,
+      email: profile.emails[0].value,
+      role: 'customer',
+      isSocialLogin: true
+    });
+    await user.save();
+  }
+  return done(null, user);
+}));
+
+// Social Login Routes
+app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/login' }), (req, res) => {
+  req.session.userId = req.user._id;
+  req.session.userRole = req.user.role;
+  req.session.userName = req.user.name;
+  res.redirect('/');
+});
+
+app.get('/auth/facebook', passport.authenticate('facebook', { scope: ['email'] }));
+app.get('/auth/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/login' }), (req, res) => {
+  req.session.userId = req.user._id;
+  req.session.userRole = req.user.role;
+  req.session.userName = req.user.name;
+  res.redirect('/');
+});
+const nodemailer = require('nodemailer');
+
+// Email transporter
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS
+  }
+});
+
+// Send email function
+async function sendEmail(to, subject, html) {
+  try {
+    await transporter.sendMail({
+      from: `"INDIAN WEB" <${process.env.EMAIL_USER}>`,
+      to,
+      subject,
+      html
+    });
+    console.log(`Email sent to ${to}`);
+  } catch (error) {
+    console.error('Email error:', error);
+  }
+}
+
+// Registration email
+app.post('/register', async (req, res) => {
+  // ... existing registration code ...
+  
+  // Send welcome email
+  await sendEmail(
+    email,
+    'Welcome to INDIAN WEB!',
+    `<h1>Welcome ${name}!</h1>
+     <p>Thank you for registering at INDIAN WEB.</p>
+     <p>You can now purchase premium software from our store.</p>
+     <a href="${process.env.SITE_URL}/store">Start Shopping</a>`
+  );
+});
+
+// Order confirmation email
+app.post('/payment-success', async (req, res) => {
+  // ... existing order code ...
+  
+  // Send order confirmation
+  await sendEmail(
+    customerEmail,
+    `Order Confirmed - ${orderId}`,
+    `<h1>Thank you for your purchase!</h1>
+     <p>Your order #${orderId} has been confirmed.</p>
+     <p>Total Amount: ₹${totalAmount}</p>
+     <a href="${process.env.SITE_URL}/invoice/${newOrder._id}">View Invoice</a>`
+  );
+});
+const Review = require('./models/Review');
+
+// Submit review
+app.post('/review/:softwareId', async (req, res) => {
+  if (!req.session.userId) return res.redirect('/login');
+  
+  const { rating, comment } = req.body;
+  const review = new Review({
+    softwareId: req.params.softwareId,
+    userId: req.session.userId,
+    userName: req.session.userName,
+    rating: parseInt(rating),
+    comment
+  });
+  await review.save();
+  res.redirect(`/software/${req.params.softwareId}`);
+});
+
+// Get reviews API
+app.get('/api/reviews/:softwareId', async (req, res) => {
+  const reviews = await Review.find({ 
+    softwareId: req.params.softwareId, 
+    isApproved: true 
+  }).sort({ createdAt: -1 });
+  res.json(reviews);
+});
+const Blog = require('./models/Blog');
+
+// Blog routes
+app.get('/blog', async (req, res) => {
+  const blogs = await Blog.find({ isPublished: true }).sort({ createdAt: -1 });
+  res.render('customer/blog', { blogs, user: req.session });
+});
+
+app.get('/blog/:slug', async (req, res) => {
+  const blog = await Blog.findOne({ slug: req.params.slug });
+  if (blog) {
+    blog.views++;
+    await blog.save();
+  }
+  res.render('customer/blog-detail', { blog, user: req.session });
+});
+
+// Admin blog routes
+app.get('/admin/blogs', isAdmin, async (req, res) => {
+  const blogs = await Blog.find().sort({ createdAt: -1 });
+  res.render('admin/blogs', { blogs, admin: req.session });
+});
+
+app.post('/admin/blog/add', isAdmin, async (req, res) => {
+  const { title, slug, excerpt, content, category } = req.body;
+  const blog = new Blog({ title, slug, excerpt, content, category });
+  await blog.save();
+  res.redirect('/admin/blogs');
+});
