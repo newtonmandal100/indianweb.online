@@ -758,3 +758,21 @@ app.listen(PORT, '0.0.0.0', () => {
   console.log(`📧 Admin Email: ${process.env.ADMIN_EMAIL || 'newtonmandal@indianweb.com'}`);
   console.log(`🔑 Admin Password: ${process.env.ADMIN_PASSWORD || 'Newton@2025'}`);
 });
+// Hero Background Upload
+app.post('/admin/upload-hero-bg', isAdmin, upload.single('heroBackground'), async (req, res) => {
+  try {
+    if (!req.file) return res.redirect('/admin/site-settings?error=1');
+    const bgUrl = '/uploads/hero-bg/' + req.file.filename;
+    
+    // hero-bg ফোল্ডার তৈরি করুন
+    const bgPath = 'public/uploads/hero-bg/';
+    if (!fs.existsSync(bgPath)) {
+      fs.mkdirSync(bgPath, { recursive: true });
+    }
+    
+    await SiteSetting.findOneAndUpdate({}, { heroBackground: bgUrl, updatedAt: Date.now() }, { upsert: true });
+    res.redirect('/');
+  } catch (error) {
+    res.redirect('/admin/site-settings?error=1');
+  }
+});

@@ -26,3 +26,21 @@ const SiteSettingSchema = new mongoose.Schema({
 });
 
 module.exports = mongoose.model('SiteSetting', SiteSettingSchema);
+const mongoose = require('mongoose');
+
+const SiteSettingSchema = new mongoose.Schema({
+  logo: { type: String, default: '/uploads/logo/default-logo.png' },
+  watermark: { type: String, default: '/uploads/watermark/default-watermark.png' },
+  heroBackground: { type: String, default: '' },
+  logoAlt: { type: String, default: 'INDIAN WEB Logo' },
+  logoWidth: { type: Number, default: 70 },
+  logoHeight: { type: Number, default: 70 },
+  heroAnimation: { type: String, default: 'fade-up' },
+  cardAnimation: { type: String, default: 'fade-up' },
+  animationSpeed: { type: Number, default: 1000 },
+  backgroundAnimation: { type: String, default: 'gradient-move' },
+  customAnimationCSS: { type: String, default: '' },
+  updatedAt: { type: Date, default: Date.now }
+});
+
+module.exports = mongoose.model('SiteSetting', SiteSettingSchema);
