@@ -79,11 +79,14 @@ const SoftwareSchema = new mongoose.Schema({
   name: { type: String, required: true },
   slug: { type: String, required: true, unique: true },
   description: { type: String, required: true },
+  longDescription: { type: String },
   price: { type: Number, required: true },
   category: { type: String, default: 'Software' },
   demoUrl: { type: String },
   imageUrl: { type: String, default: '/images/default-software.jpg' },
+  features: [{ type: String }],
   version: { type: String, default: '1.0.0' },
+  downloads: { type: Number, default: 0 },
   isActive: { type: Boolean, default: true },
   createdAt: { type: Date, default: Date.now }
 });
@@ -101,7 +104,10 @@ const OrderSchema = new mongoose.Schema({
     quantity: Number
   }],
   totalAmount: { type: Number, required: true },
+  paymentMethod: { type: String, default: 'Razorpay' },
+  paymentId: { type: String },
   status: { type: String, enum: ['pending', 'completed', 'failed'], default: 'pending' },
+  invoiceNumber: { type: String },
   createdAt: { type: Date, default: Date.now }
 });
 const Order = mongoose.model('Order', OrderSchema);
@@ -146,6 +152,7 @@ const PortfolioSchema = new mongoose.Schema({
     twitter: { type: String, default: '' },
     linkedin: { type: String, default: '' }
   },
+  featuredSoftware: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Software' }],
   updatedAt: { type: Date, default: Date.now }
 });
 const Portfolio = mongoose.model('Portfolio', PortfolioSchema);
@@ -543,6 +550,17 @@ app.post('/admin/software/add', isAdmin, upload.single('softwareImage'), async (
   }
 });
 
+app.post('/admin/software/update/:id', isAdmin, upload.single('softwareImage'), async (req, res) => {
+  try {
+    const updateData = req.body;
+    if (req.file) updateData.imageUrl = '/uploads/software-images/' + req.file.filename;
+    await Software.findByIdAndUpdate(req.params.id, updateData);
+    res.redirect('/admin/software');
+  } catch (error) {
+    res.redirect('/admin/software?error=1');
+  }
+});
+
 app.post('/admin/software/delete/:id', isAdmin, async (req, res) => {
   try {
     await Software.findByIdAndDelete(req.params.id);
@@ -693,6 +711,15 @@ app.post('/admin/blog/add', isAdmin, async (req, res) => {
     const { title, slug, excerpt, content, category } = req.body;
     const blog = new Blog({ title, slug, excerpt, content, category });
     await blog.save();
+    res.redirect('/admin/blogs');
+  } catch (error) {
+    res.redirect('/admin/blogs?error=1');
+  }
+});
+
+app.post('/admin/blog/delete/:id', isAdmin, async (req, res) => {
+  try {
+    await Blog.findByIdAndDelete(req.params.id);
     res.redirect('/admin/blogs');
   } catch (error) {
     res.redirect('/admin/blogs?error=1');
