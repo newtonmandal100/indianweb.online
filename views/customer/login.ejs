@@ -43,9 +43,9 @@
         </div>
         
         <div class="glow-card rounded-2xl p-8">
-            <% if(req.query.error) { %>
+            <% if(error) { %>
                 <div class="bg-red-500/20 border border-red-500 text-red-400 p-3 rounded-lg mb-4 text-center">
-                    <%= req.query.error %>
+                    <%= error %>
                 </div>
             <% } %>
             
